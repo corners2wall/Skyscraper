@@ -53,7 +53,7 @@ renderer.render(scene, camera);
 let current: "x" | "z" = "x";
 function animate() {
     requestAnimationFrame(animate);
-    const speed = 0.1;
+    const speed = 0.15;
     const activeBlock = blockManager.getLastBlock();
     controls.update();
 
@@ -93,7 +93,7 @@ function generateNewBlock(
 // predefine values
 
 material.color = new Color(0xfb8e00);
-const initialBlock = generateNewBlock(0, 0, 1.5, 3, 1, 3);
+const initialBlock = generateNewBlock(1.5, 0, 1.5, 3, 1, 3);
 blockManager.addBlock(initialBlock);
 scene.add(initialBlock);
 renderer.render(scene, camera)
@@ -103,23 +103,34 @@ interface Line {
     end: number
 }
 
-function getIntersection(a1: number, b1: number, a2: number, b2: number) {
-    debugger;
-    if (b1 < a2 || b2 < a1) {
-        return ({ size: 0 })
+interface Size {
+    size: number,
+    start: number,
+    end: number
+}
+
+function getIntersection(line1: Line, line2: Line): Size {
+    if (line1.end < line2.start || line2.end < line1.start) {
+        return ({ size: 0, start: 0, end: 0 })
     }
 
-    if (a2 >= a1 && b1 <= b2) {
-        return ({ size: Math.abs(b1 - a2) })
+    if (line2.start >= line1.start && line1.end <= line2.end) {
+        return ({ size: Math.abs(line1.end - line2.start), start: line2.start, end: line1.end })
         // console.log('2', a2, b1, Math.abs(a2 - b1), Math.abs(b1 - a2))
     }
 
-    if (a2 <= a1 && b1 >= b2) {
-        return ({ size: Math.abs(b2 - a1) })
+    if (line2.start <= line1.start && line1.end >= line2.end) {
+        return ({ size: Math.abs(line2.end - line1.start), start: line1.start, end: line2.end })
         // console.log('3', a1, b2, Math.abs(a2 - b1), Math.abs(b1 - a2));
     }
 
-    return ({ size: 0 })
+    // add if  a1  a2  b2  b2 // line1.start  ------ line2.start ------ line2.end ------ line1.end
+
+    return ({ size: 0, start: 0, end: 0 })
+}
+
+function changeSizeBlock(block: Mesh) {
+
 }
 
 window.addEventListener("click", () => {
@@ -129,7 +140,6 @@ window.addEventListener("click", () => {
     let height = 1;
     let depth = 3;
     let meshSize = { width, height, depth }
-
 
     // const x = current === "x" ? -10 : 1.5;
     // const z = current === "z" ? -10 : 1.5;
@@ -142,7 +152,8 @@ window.addEventListener("click", () => {
 
     if (blocks.length > 1) {
         const blocks = blockManager.getAllBlocks();
-        const animatedBox3 = wrapMeshToBox(blocks[blocks.length - 1]);
+        const animatedBlock = blocks[blocks.length - 1]
+        const animatedBox3 = wrapMeshToBox(animatedBlock);
         const stableBox3 = wrapMeshToBox(blocks[blocks.length - 2]);
 
         const minStable = stableBox3.min[current];
@@ -154,10 +165,19 @@ window.addEventListener("click", () => {
         const animatedLine = { start: minAnimated, end: maxAnimated }
 
 
-        const size = getIntersection(minStable, maxStable, minAnimated, maxAnimated);
+        // const size = getIntersection(minStable, maxStable, minAnimated, maxAnimated);
+        const size = getIntersection(stableLine, animatedLine);
+        // debugger;
+        // const scale = (maxAnimated - minAnimated) / size.size;
+        // meshSize.width = size.size;
+        // console.log(size.size);
+        // animatedBlock.position.setX(size.start)
+        // animatedBlock.scale.x = scale
+        scene.remove(animatedBlock);
         debugger;
-        meshSize.width = size.size;
-        // getIntersection(stableLine, animatedLine);
+        const block = generateNewBlock(size.size, y - 1, 1.5, size.size, meshSize.height, meshSize.depth);
+        blockManager.addBlock(block);
+        scene.add(block);
     }
 
     const activeBlock = generateNewBlock(-10, y, 1.5, meshSize.width, meshSize.height, meshSize.depth);
