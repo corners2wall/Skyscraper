@@ -1,19 +1,20 @@
-import {MeshPhongMaterial, Mesh, Color} from "three";
+import { BoxGeometry, Color, Mesh, MeshStandardMaterial } from "three";
+import BlockSizeManager from "./BlockSizeManager";
+import PositionHelper from "./PositionHelper";
 
-import BlockSize from './BlockSize';
+export default class Block extends Mesh {
+    private positionHelper: PositionHelper;
 
-export class Block extends Mesh {
-    
-    constructor(x: number, y: number, z: number) {
+    constructor(positionHelper: PositionHelper, blockSizeManager: BlockSizeManager) {
         super();
-        // const color = new Color(`hsl(${30 + y * 4}, 100%, 50%)`);
-
-        this.material = new MeshPhongMaterial();
-        this.geometry = new BoxGeometry(width, height, depth);
-        this.position.set(x, y, z);
+        this.positionHelper = positionHelper;
+        this.material = new MeshStandardMaterial({ color: new Color(`hsl(${30 + positionHelper.getY() * 4}, 100%, 50%)`) });
+        this.geometry = new BoxGeometry(...blockSizeManager.getSize());
+        this.setPosition();
+        // this.position.set(positionHelper.getX(),);
     }
 
-    setColor(color: Color) {
-        this.material.color = color;
+    private setPosition() {
+        this.position.set(this.positionHelper.getX(), this.positionHelper.getY(), this.positionHelper.getZ())
     }
 }

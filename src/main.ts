@@ -1,20 +1,19 @@
 import {
     AmbientLight,
-    Box3,
-    BoxGeometry,
-    Color,
+    AxesHelper,
     DirectionalLight,
-    Mesh,
-    MeshPhongMaterial,
     PerspectiveCamera,
     Scene,
     WebGLRenderer,
 } from "three";
-import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import BlockManager from "./Components/BlockManager";
 import Block from "./Components/Block";
 import Game from "./Components/Game";
-
+import getIntersection from "./Utils/getIntersection";
+import getAxisLine from "./Utils/getAxisLine";
+import BlockSizeManager from "./Components/BlockSizeManager";
+import PositionHelper from "./Components/PositionHelper";
+import wrapMeshToBox from "./Utils/wrapMeshToBox";
 
 const canvas = document.querySelector(".canvas") as HTMLCanvasElement;
 
@@ -28,89 +27,46 @@ const camera = new PerspectiveCamera(
 camera.position.set(1, 2, 5);
 
 const blockManager = new BlockManager();
+const blockSizeManager = new BlockSizeManager();
+const positionHelper = new PositionHelper();
+const game = new Game();
 
 const directionalLight = new DirectionalLight("white", 0.6);
 
 directionalLight.position.set(5, 6, 3);
 
-const ambientLight = new AmbientLight(0x404040, 0.9);
+const ambientLight = new AmbientLight('white', 0.8);
 
 scene.add(ambientLight, directionalLight);
 
 const renderer = new WebGLRenderer({ canvas });
+const axes = new AxesHelper(5);
 
-camera.position.set(3.5, 4, 6);
+scene.add(axes);
+
+camera.position.set(4, 4, 6);
+camera.lookAt(1, 0, 0);
 
 renderer.setSize(window.innerWidth, window.innerHeight);
-const controls = new OrbitControls(camera, renderer.domElement);
-controls.update();
-
-renderer.render(scene, camera);
 
 function animate() {
     requestAnimationFrame(animate);
-    const speed = 0.1;
+    const speed = 0.15;
     const activeBlock = blockManager.getLastBlock();
-    controls.update();
 
-    activeBlock.position[current] += speed;
+    activeBlock.position[game.getAxes()] += speed;
 
     renderer.render(scene, camera);
 }
-
-const game = new Game();
-
-function wrapMeshToBox(mesh: Mesh): Box3 {
-    return new Box3().setFromObject(mesh);
-}
-
-// predefine values
-
-const initialBlock = new Block(1.5, 0, 1.5);
+const initialBlock = new Block(positionHelper, blockSizeManager);
 
 blockManager.addBlock(initialBlock);
 scene.add(initialBlock);
 renderer.render(scene, camera)
 
-interface Line {
-    start: number;
-    end: number
-}
+let y = 0;
 
-interface Size {
-    size: number,
-    start: number,
-}
-
-function getIntersection(line1: Line, line2: Line): Size {
-    if (line1.end < line2.start || line2.end < line1.start) {
-        return ({ size: 0, start: 0 })
-    }
-
-    if (line2.start <= line1.start && line1.end >= line2.end) {
-        const size = Math.abs(line2.end - line1.start);
-        const start = line1.start + (size / 2);
-
-        return ({ size, start })
-    }
-
-    if (line2.start >= line1.start && line1.end <= line2.end) {
-        const size = Math.abs(line1.end - line2.start);
-        const start = line2.start + (size / 2);
-
-        return ({ size, start })
-    }
-
-    return ({ size: 0, start: 0 })
-}
-
-function getAxesLane(box3: Box3, axes: 'x' | 'z' | 'y'): Line {
-    const start = box3.min[axes];
-    const end = box3.max[axes];
-
-    return ({start, end});
-}
-
+game.toggleAxes();
 window.addEventListener("click", () => {
     const isGameStarted = game.getIsGameStarted();
     const blocks = blockManager.getAllBlocks();
@@ -122,29 +78,40 @@ window.addEventListener("click", () => {
         const animatedBox3 = wrapMeshToBox(animatedBlock);
         const stableBox3 = wrapMeshToBox(stableBlock);
 
-        const stableLine = getAxesLane(stableBox3, current);
-        const animatedLine = getAxesLane(animatedBox3, current);
+        const stableLine = getAxisLine(stableBox3, game.getAxes());
+        const animatedLine = getAxisLine(animatedBox3, game.getAxes());
 
-        const {size, start} = getIntersection(stableLine, animatedLine);
+        const { size, start } = getIntersection(stableLine, animatedLine);
 
         scene.remove(animatedBlock);
 
-        const block = new Block(start , y, 1.5);
+        if (game.getAxes() === 'x') {
+            positionHelper.setX(start);
+            blockSizeManager.setWidth(size);
+        }
+
+        if (game.getAxes() === 'z') {
+            positionHelper.setZ(start);
+            blockSizeManager.setDepth(size);
+        }
+
+        const block = new Block(positionHelper, blockSizeManager);
+
 
         blockManager.addBlock(block);
         scene.add(block);
     }
+    game.toggleAxes();
 
-    // const x = current === "x" ? -10 : 1.5;
-    // const z = current === "z" ? -10 : 1.5;
+    positionHelper.changeAxisPosition(game.getAxes(), -10);
+    positionHelper.setY(positionHelper.getY() + 1);
 
-    // current = current === "x" ? "z" : "x"; // fix that
-
-    const activeBlock = new Block(-10, y, 1.5);
+    const activeBlock = new Block(positionHelper, blockSizeManager);
+    camera.lookAt(1, y, 0);
     camera.position.setY(camera.position.y + 1);
+    y = y + 1;
 
     blockManager.addBlock(activeBlock);
-
     scene.add(activeBlock);
 
     if (!isGameStarted) {
