@@ -5,18 +5,28 @@ interface BlockSize {
     depth: number,
 }
 
+interface BlockPosition {
+    x: number,
+    y: number,
+    z: number
+}
+
 export default class Game {
     private isGameStarted: boolean
     private axes: Axes;
-    private activeBlock: BlockSize;
+    private blockSize: BlockSize;
+    private blockPosition: BlockPosition;
 
     constructor() {
         this.isGameStarted = false;
         this.axes = 'x';
-        this.activeBlock = {
+        this.blockSize = {
             width: 3,
             height: 1,
             depth: 3
+        }
+        this.blockPosition = {
+            // x:
         }
     }
 
@@ -37,27 +47,27 @@ export default class Game {
     }
 
     public getBlockHeight() {
-        return this.activeBlock.height
+        return this.blockSize.height
     }
 
     public setBlockHeight(height: number) {
-        this.activeBlock.height = height;
+        this.blockSize.height = height;
     }
 
     public getBlockWidth() {
-        return this.activeBlock.width;
+        return this.blockSize.width;
     }
 
     public setBlockWidth(width: number) {
-        return this.activeBlock.width = width;
+        return this.blockSize.width = width;
     }
 
     public getBlockDepth() {
-        return this.activeBlock.depth;
+        return this.blockSize.depth;
     }
 
     public setBlockDepth(depth: number) {
-        this.activeBlock.depth = depth
+        this.blockSize.depth = depth
     }
 
 }
