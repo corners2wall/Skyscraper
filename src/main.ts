@@ -15,6 +15,7 @@ import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import BlockManager from "./Components/BlockManager";
 import Game from "./Components/Game";
 
+
 const canvas = document.querySelector(".canvas") as HTMLCanvasElement;
 
 const scene = new Scene();
@@ -34,11 +35,9 @@ const directionalLight = new DirectionalLight("white", 0.6);
 
 directionalLight.position.set(5, 6, 3);
 
-const ambientLight = new AmbientLight(0x404040, 0.7);
+const ambientLight = new AmbientLight(0x404040, 0.9);
 
-const axesHelper = new AxesHelper(5);
-
-scene.add(ambientLight, directionalLight, axesHelper);
+scene.add(ambientLight, directionalLight);
 
 const renderer = new WebGLRenderer({ canvas });
 
@@ -53,13 +52,11 @@ renderer.render(scene, camera);
 let current: "x" | "z" = "x";
 function animate() {
     requestAnimationFrame(animate);
-    const speed = 0.15;
+    const speed = 0.1;
     const activeBlock = blockManager.getLastBlock();
     controls.update();
 
-    if (current === "x") activeBlock.position.x += speed;
-
-    if (current === "z") activeBlock.position.z += speed;
+    activeBlock.position[current] += speed;
 
     renderer.render(scene, camera);
 }
@@ -106,40 +103,70 @@ interface Line {
 interface Size {
     size: number,
     start: number,
-    end: number
 }
 
 function getIntersection(line1: Line, line2: Line): Size {
     if (line1.end < line2.start || line2.end < line1.start) {
-        return ({ size: 0, start: 0, end: 0 })
-    }
-
-    if (line2.start >= line1.start && line1.end <= line2.end) {
-        return ({ size: Math.abs(line1.end - line2.start), start: line2.start, end: line1.end })
-        // console.log('2', a2, b1, Math.abs(a2 - b1), Math.abs(b1 - a2))
+        return ({ size: 0, start: 0 })
     }
 
     if (line2.start <= line1.start && line1.end >= line2.end) {
-        return ({ size: Math.abs(line2.end - line1.start), start: line1.start, end: line2.end })
-        // console.log('3', a1, b2, Math.abs(a2 - b1), Math.abs(b1 - a2));
+        const size = Math.abs(line2.end - line1.start);
+        const start = line1.start + (size / 2);
+
+        return ({ size, start })
     }
 
-    // add if  a1  a2  b2  b2 // line1.start  ------ line2.start ------ line2.end ------ line1.end
+    if (line2.start >= line1.start && line1.end <= line2.end) {
+        const size = Math.abs(line1.end - line2.start);
+        const start = line2.start + (size / 2);
 
-    return ({ size: 0, start: 0, end: 0 })
+        return ({ size, start })
+    }
+
+    return ({ size: 0, start: 0 })
 }
 
 function changeSizeBlock(block: Mesh) {
 
 }
 
+function getAxesLane(box3: Box3, axes: 'x' | 'z' | 'y'): Line {
+    const start = box3.min[axes];
+    const end = box3.max[axes];
+
+    return ({start, end});
+}
+
 window.addEventListener("click", () => {
     const isGameStarted = game.getIsGameStarted();
-    // const meshSize = getMeshSize();
     let width = 3;
     let height = 1;
     let depth = 3;
     let meshSize = { width, height, depth }
+
+    const blocks = blockManager.getAllBlocks();
+
+    if (blocks.length > 1) {
+        const animatedBlock = blocks[blocks.length - 1];
+        const stableBlock = blocks[blocks.length - 2];
+
+        const animatedBox3 = wrapMeshToBox(animatedBlock);
+        const stableBox3 = wrapMeshToBox(stableBlock);
+
+        const stableLine = getAxesLane(stableBox3, current);
+        const animatedLine = getAxesLane(animatedBox3, current);
+
+        const {size, start} = getIntersection(stableLine, animatedLine);
+
+        scene.remove(animatedBlock);
+
+        const block = generateNewBlock(start , y, 1.5, size, meshSize.height, meshSize.depth);
+        meshSize.width = size;
+        blockManager.addBlock(block);
+        scene.add(block);
+    }
+
 
     // const x = current === "x" ? -10 : 1.5;
     // const z = current === "z" ? -10 : 1.5;
@@ -148,39 +175,9 @@ window.addEventListener("click", () => {
 
     // current = current === "x" ? "z" : "x"; // fix that
 
-    const blocks = blockManager.getAllBlocks();
-
-    if (blocks.length > 1) {
-        const blocks = blockManager.getAllBlocks();
-        const animatedBlock = blocks[blocks.length - 1]
-        const animatedBox3 = wrapMeshToBox(animatedBlock);
-        const stableBox3 = wrapMeshToBox(blocks[blocks.length - 2]);
-
-        const minStable = stableBox3.min[current];
-        const maxStable = stableBox3.max[current];
-        const stableLine = { start: minStable, end: maxStable };
-
-        const minAnimated = animatedBox3.min[current];
-        const maxAnimated = animatedBox3.max[current];
-        const animatedLine = { start: minAnimated, end: maxAnimated }
-
-
-        // const size = getIntersection(minStable, maxStable, minAnimated, maxAnimated);
-        const size = getIntersection(stableLine, animatedLine);
-        // debugger;
-        // const scale = (maxAnimated - minAnimated) / size.size;
-        // meshSize.width = size.size;
-        // console.log(size.size);
-        // animatedBlock.position.setX(size.start)
-        // animatedBlock.scale.x = scale
-        scene.remove(animatedBlock);
-        debugger;
-        const block = generateNewBlock(size.size, y - 1, 1.5, size.size, meshSize.height, meshSize.depth);
-        blockManager.addBlock(block);
-        scene.add(block);
-    }
 
     const activeBlock = generateNewBlock(-10, y, 1.5, meshSize.width, meshSize.height, meshSize.depth);
+    camera.position.setY(camera.position.y + 1);
 
     blockManager.addBlock(activeBlock);
 
@@ -190,7 +187,5 @@ window.addEventListener("click", () => {
         game.setIsGameStarted(true);
         animate();
     }
-
-    // camera.position.setY(camera.position.y + 1)
 
 });
