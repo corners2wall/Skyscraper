@@ -350,6 +350,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"cannon-es@npm:^0.20.0":
+  version: 0.20.0
+  resolution: "cannon-es@npm:0.20.0"
+  checksum: a11c2a51d8f4bf314fdbe671dd03e025513e3ab98621d3260c06f2c2a11922c67bc670f98e866a21919d966ba9b19aade5b7c3f9cf507a2ed7499c85eb8934bb
+  languageName: node
+  linkType: hard
+
 "chownr@npm:^2.0.0":
   version: 2.0.0
   resolution: "chownr@npm:2.0.0"
@@ -1217,6 +1224,7 @@ __metadata:
   resolution: "skyscraper@workspace:."
   dependencies:
     "@types/three": ^0.157.0
+    cannon-es: ^0.20.0
     three: ^0.157.0
     typescript: ^5.0.2
     vite: ^4.4.5
