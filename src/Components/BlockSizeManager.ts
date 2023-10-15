@@ -19,7 +19,7 @@ export default class BlockSizeManager {
         BlockSizeManager.instance = this;
     }
 
-    public getSize() {
+    public getSize(): [width: number, height: number, depth: number] {
         return [this.width, this.height, this.depth]
     }
 

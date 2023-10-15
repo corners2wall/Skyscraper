@@ -15,8 +15,14 @@ export default class PositionHelper {
         this.z = z;
     }
 
-    getPosition() {
+    getPosition(): [x: number, y: number, z: number] {
         return [this.x, this.y, this.z]
+    }
+
+    setPosition(x: number, y: number, z: number) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
     }
 
     changeAxisPosition(axis: Axis, value: number) {
