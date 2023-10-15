@@ -35,20 +35,12 @@ export default class PositionHelper {
         return this.x
     }
 
-    setXToDefault() {
-        this.x = PositionHelper.X;
-    }
-
     setX(x: number) {
         this.x = x;
     }
 
     getZ() {
         return this.z
-    }
-
-    setZToDefault() {
-        this.z = PositionHelper.Z;
     }
 
     setZ(z: number) {

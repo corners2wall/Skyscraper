@@ -1,6 +1,5 @@
 import {
     AmbientLight,
-    AxesHelper,
     DirectionalLight,
     PerspectiveCamera,
     Scene,
@@ -14,17 +13,13 @@ import getAxisLine from "./Utils/getAxisLine";
 import BlockSizeManager from "./Components/BlockSizeManager";
 import PositionHelper from "./Components/PositionHelper";
 import wrapMeshToBox from "./Utils/wrapMeshToBox";
+import Camera from "./Components/Camera";
 
 const canvas = document.querySelector(".canvas") as HTMLCanvasElement;
 
 const scene = new Scene();
 
-const camera = new PerspectiveCamera(
-    75,
-    window.innerWidth / window.innerHeight
-);
-
-camera.position.set(1, 2, 5);
+const camera = new Camera();
 
 const blockManager = new BlockManager();
 const blockSizeManager = new BlockSizeManager();
@@ -40,12 +35,6 @@ const ambientLight = new AmbientLight('white', 0.8);
 scene.add(ambientLight, directionalLight);
 
 const renderer = new WebGLRenderer({ canvas });
-const axes = new AxesHelper(5);
-
-scene.add(axes);
-
-camera.position.set(4, 4, 6);
-camera.lookAt(1, 0, 0);
 
 renderer.setSize(window.innerWidth, window.innerHeight);
 
@@ -63,8 +52,6 @@ const initialBlock = new Block(positionHelper, blockSizeManager);
 blockManager.addBlock(initialBlock);
 scene.add(initialBlock);
 renderer.render(scene, camera)
-
-let y = 0;
 
 game.toggleAxes();
 window.addEventListener("click", () => {
@@ -107,9 +94,7 @@ window.addEventListener("click", () => {
     positionHelper.setY(positionHelper.getY() + 1);
 
     const activeBlock = new Block(positionHelper, blockSizeManager);
-    camera.lookAt(1, y, 0);
-    camera.position.setY(camera.position.y + 1);
-    y = y + 1;
+    camera.updateCameraPosition();
 
     blockManager.addBlock(activeBlock);
     scene.add(activeBlock);
