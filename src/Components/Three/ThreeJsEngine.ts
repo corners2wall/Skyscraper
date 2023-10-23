@@ -8,6 +8,7 @@ export default class ThreeJsEngine implements Engine {
 
     constructor(renderer: Renderer) {
         this.renderer = renderer;
+        this.render = this.render.bind(this);
     }
 
     public render(): void {

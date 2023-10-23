@@ -1,6 +1,5 @@
-import { Plane, Shape, Sphere, Vec3 } from "cannon-es";
+import { Box, Plane, Shape, Sphere, Vec3 } from "cannon-es";
 import { Factory } from "../../Types/common";
-import { Box } from "shapes/Box";
 
 export type CannonShapeType = 'Sphere' | 'Box' | 'Plane';
 

@@ -1,7 +1,6 @@
-import { Object3D, Scene } from "three";
+import { Camera, Object3D, Scene } from "three";
 import { Builder } from "../../Types/common";
 import ThreeJsEngine from "./ThreeJsEngine";
-import Camera from "../Camera";
 
 export default class ThreeJsEngineBuilder implements Builder<ThreeJsEngine> {
     private threeJsEngine: ThreeJsEngine

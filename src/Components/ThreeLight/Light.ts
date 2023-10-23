@@ -4,14 +4,15 @@ import LightFactory, { LightType } from "./LightFactory";
 
 interface LightOptions {
     lightType: LightType;
-    position: Positions;
-    color: Color;
+    position?: Positions;
+    color?: Color;
 }
 
+// Wrong implementation
 export default class Light {
     private light: ThreeLight
 
-    constructor({ lightType, position, color }: LightOptions) {
+    constructor({ lightType, position = [1, 1, 1], color = new Color('white') }: LightOptions) {
         this.light = LightFactory.create(lightType)
 
         this.setLightColor(color);
@@ -24,5 +25,9 @@ export default class Light {
 
     public setLightColor(color: Color) {
         this.light.color.set(color);
+    }
+
+    public getLight() {
+        return this.light
     }
 }

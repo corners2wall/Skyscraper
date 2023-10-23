@@ -5,6 +5,7 @@ export default class EngineManager {
 
     constructor(...engines: Engine[]) {
         this.engines = engines
+        this.animate = this.animate.bind(this);
     }
 
     public animate() {
