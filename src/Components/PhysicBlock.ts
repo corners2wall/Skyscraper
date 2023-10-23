@@ -3,9 +3,9 @@ import PositionHelper from './PositionHelper'
 import BlockSizeManager from './BlockSizeManager'
 
 export default class PhysicBlock extends Body {
-    constructor(positionHelper: PositionHelper, sizeManager: BlockSizeManager, mass = 100) {
+    constructor(positionHelper: PositionHelper, blockSizeManager: BlockSizeManager, mass = 100) {
         super({ mass });
-        const shape = this.generateCubeShape(...sizeManager.getSize());
+        const shape = this.generateCubeShape(...blockSizeManager.getSize());
 
         this.addShape(shape);
         this.position.set(...positionHelper.getPosition())

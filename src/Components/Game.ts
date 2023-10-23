@@ -7,7 +7,6 @@ export default class Game {
     constructor() {
         this.isGameStarted = false;
         this.axes = 'x'
-
     }
 
     public setIsGameStarted(value: boolean) {
