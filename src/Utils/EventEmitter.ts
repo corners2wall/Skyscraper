@@ -1,17 +1,30 @@
-export default class EventEmitter {
+import { MapKey } from "../Types/common";
+
+export default class EventEmitter<Events extends MapKey = MapKey> {
+    eventMap: Map<Events, any[]>;
     constructor() {
-
+        this.eventMap = new Map();
     }
 
-    public emit() {
-
+    private get(key: Events) {
+        return this.eventMap.get(key);
     }
 
-    public subscribe() {
+    addListener(eventType: Events, listener: any) {
+        const callbacks = this.get(eventType) || [];
 
+        this.eventMap.set(eventType, [...callbacks, listener]);
     }
 
-    public notify() {
-
+    removeListener(eventType: Events, listener: any) {
+        (this.get(eventType) || []).filter((callback) => callback !== listener);
     }
+
+    emit(eventType: Events, data?: any) {
+        const callbacks = this.get(eventType) || [];
+
+        callbacks.forEach((callback) => callback(data));
+    }
+
+    sequenceEmit() { }
 }

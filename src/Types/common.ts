@@ -36,3 +36,5 @@ export interface Factory<T> {
     // register(key: string, constructor: T): void;
     create(type: string): T
 }
+
+export type MapKey = string | number | Symbol;

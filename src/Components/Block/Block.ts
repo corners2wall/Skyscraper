@@ -1,6 +1,6 @@
 import { BoxGeometry, Color, Mesh, MeshStandardMaterial } from "three";
 import BlockSizeManager from "./BlockSizeManager";
-import PositionHelper from "./PositionHelper";
+import PositionHelper from "../PositionHelper";
 
 export default class Block extends Mesh {
     private positionHelper: PositionHelper;

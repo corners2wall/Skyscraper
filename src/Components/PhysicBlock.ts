@@ -1,9 +1,9 @@
 import { Body, Box, Vec3 } from 'cannon-es'
 import PositionHelper from './PositionHelper'
-import BlockSizeManager from './BlockSizeManager'
+import BlockSizeManager from './Block/BlockSizeManager'
 
 export default class PhysicBlock extends Body {
-    constructor(positionHelper: PositionHelper, blockSizeManager: BlockSizeManager, mass = 100) {
+    constructor(positionHelper: PositionHelper, blockSizeManager: BlockSizeManager, mass = 1) {
         super({ mass });
         const shape = this.generateCubeShape(...blockSizeManager.getSize());
 
