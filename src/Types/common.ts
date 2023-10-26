@@ -22,6 +22,8 @@ export interface Builder<T> {
 
 export type Positions = [x: number, y: number, z: number];
 
+export type Sizes = [width: number, height: number, depth: number];
+
 export interface WorldOptions {
     gravity?: Vec3;
     frictionGravity?: Vec3;

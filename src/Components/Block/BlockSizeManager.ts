@@ -1,3 +1,5 @@
+import { Sizes } from "../../Types/common";
+
 export default class BlockSizeManager {
     private static INITIAL_WIDTH = 3;
     private static INITIAL_HEIGHT = 1;
@@ -19,8 +21,14 @@ export default class BlockSizeManager {
         BlockSizeManager.instance = this;
     }
 
-    public getSize(): [width: number, height: number, depth: number] {
+    public getSizes(): Sizes {
         return [this.width, this.height, this.depth]
+    }
+
+    public setSizes([width, height, depth]: Sizes) {
+        this.width = width;
+        this.height = height;
+        this.depth = depth;
     }
 
     public setWidth(width: number) {

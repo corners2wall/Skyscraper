@@ -1,3 +1,4 @@
+import { Positions } from "../Types/common";
 import quaternionAdapter from "../Utils/quaternionAdapter";
 import vectorAdapter from "../Utils/vectorAdapter";
 import Block from "./Block/Block";
@@ -14,16 +15,20 @@ export default class GameBlock {
         this.physicBlock = new PhysicBlock(positionHelper, blockSizeManager);
     }
 
-    syncPosition() {
+    public syncPosition() {
         this.block.position.set(...vectorAdapter(this.physicBlock.position));
         this.block.quaternion.set(...quaternionAdapter(this.physicBlock.quaternion))
     }
 
-    getBlock() {
+    public changeBlockPosition(positions: Positions) {
+        this.physicBlock.position.set(...positions);
+    }
+
+    public getBlock() {
         return this.block
     }
 
-    getPhysicBlock() {
+    public getPhysicBlock() {
         return this.physicBlock
     }
 }

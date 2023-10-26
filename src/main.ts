@@ -1,10 +1,12 @@
 import threeEngine from './Components/Three';
 import cannonEngine from './Components/Cannon';
 import EngineManager from './Components/EngineManager';
-import GameBlock from './Components/GameBlock';
 import PositionHelper from './Components/PositionHelper';
 import BlockSizeManager from './Components/Block/BlockSizeManager';
 import EventEmitter from './Utils/EventEmitter';
+import BlockGenerator from './Components/Block/BlockGenerator';
+import Game from './Components/Game';
+import { RUN_GAME, CREATE_BLOCK, ANIMATE_BLOCK, SYNC_BLOCK_WITH_ENGINE, TOGGLE_AXIS } from './Consts/actions';
 
 const eventEmitter = new EventEmitter();
 
@@ -12,31 +14,37 @@ const engineManager = new EngineManager(threeEngine, cannonEngine);
 
 const positionHelper = new PositionHelper();
 const blockSizeManager = new BlockSizeManager();
-const box = new GameBlock(positionHelper, blockSizeManager);
 
-threeEngine.addObjectToScene(box.getBlock());
-cannonEngine.addBody(box.getPhysicBlock());
+const blockGenerator = new BlockGenerator(positionHelper, blockSizeManager);
 
-function animate() {
-    engineManager.animate();
-    // const prevPosition = box.getPhysicBlock().position;
-    // box.getPhysicBlock().position = new Vec3(prevPosition.x + 0.15, prevPosition.y, prevPosition.z);
+const game = new Game(engineManager, eventEmitter);
 
-    box.syncPosition();
+eventEmitter.addListener(RUN_GAME, game.runAnimateLoop);
+eventEmitter.addListener(CREATE_BLOCK, blockGenerator.generateNewBlock);
 
-    requestAnimationFrame(animate)
-}
+eventEmitter.addListener(SYNC_BLOCK_WITH_ENGINE, threeEngine.addObjectToScene);
+eventEmitter.addListener(SYNC_BLOCK_WITH_ENGINE, cannonEngine.addBody);
 
-animate();
+eventEmitter.addListener(TOGGLE_AXIS, game.toggleAxes);
 
-// const game = new Game(engineManager);
+eventEmitter.addListener(ANIMATE_BLOCK, blockGenerator.changePositionInLastBlock)
 
-// game.runAnimateLoop();
+window.addEventListener('DOMContentLoaded', () => {
+    eventEmitter.emit(CREATE_BLOCK);
+    eventEmitter.emit(RUN_GAME);
 
+    const gameBlock = blockGenerator.getLastBlockFromQueue();
+
+    eventEmitter.emit(SYNC_BLOCK_WITH_ENGINE, gameBlock);
+    // eventEmitter.emit();
+})
 
 window.addEventListener('click', () => {
-    // eventEmitter.emit(RUN_GAME);
-    // eventEmitter.emit('');
-    // .emit('')
-    // .emit('')
+    eventEmitter.emit(CREATE_BLOCK);
+    eventEmitter.emit(TOGGLE_AXIS);
+
+    const gameBlock = blockGenerator.getLastBlockFromQueue();
+
+    eventEmitter.emit(SYNC_BLOCK_WITH_ENGINE, gameBlock);
+    eventEmitter.emit(ANIMATE_BLOCK);
 })

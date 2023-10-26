@@ -6,6 +6,7 @@ export default class CannonEngine implements Engine {
 
     constructor(options?: WorldOptions) {
         this.world = new World(options);
+        this.addBody = this.addBody.bind(this);
     }
 
     public render() {

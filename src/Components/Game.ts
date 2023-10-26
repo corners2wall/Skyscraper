@@ -1,31 +1,35 @@
+import { ANIMATE_BLOCK } from "../Consts/actions";
+import EventEmitter from "../Utils/EventEmitter";
 import EngineManager from "./EngineManager";
 
 type Axes = 'x' | 'z'
 
+// Seems like god object
 export default class Game {
-    private isGameStarted: boolean;
-    private engineManager: EngineManager;
     private axes: Axes;
+    private isGameStarted = false;
 
-    constructor(engineManager: EngineManager) {
+    constructor(
+        private engineManager: EngineManager,
+        private eventEmitter: EventEmitter
+    ) {
         this.axes = 'x'
-        this.isGameStarted = false;
-        this.engineManager = engineManager;
+        this.toggleAxes = this.toggleAxes.bind(this);
+        this.runAnimateLoop = this.runAnimateLoop.bind(this);
     }
 
     public runAnimateLoop() {
+        const axis = this.getAxes();
+
         this.engineManager.animate();
 
-        requestAnimationFrame(this.runAnimateLoop.bind(this));
+        if (this.isGameStarted) {
+            this.eventEmitter.emit(ANIMATE_BLOCK, { axis });
+        }
+
+        requestAnimationFrame(this.runAnimateLoop);
     }
 
-    public setIsGameStarted(value: boolean) {
-        this.isGameStarted = value;
-    }
-
-    public getIsGameStarted() {
-        return this.isGameStarted;
-    }
 
     public getAxes() {
         return this.axes;
