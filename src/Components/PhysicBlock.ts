@@ -3,7 +3,7 @@ import PositionHelper from './PositionHelper'
 import BlockSizeManager from './Block/BlockSizeManager'
 
 export default class PhysicBlock extends Body {
-    constructor(positionHelper: PositionHelper, blockSizeManager: BlockSizeManager, mass = 1) {
+    constructor(positionHelper: PositionHelper, blockSizeManager: BlockSizeManager, mass = 0) {
         super({ mass });
         const shape = this.generateCubeShape(...blockSizeManager.getSizes());
 
@@ -13,7 +13,7 @@ export default class PhysicBlock extends Body {
     }
 
     generateCubeShape(x: number, y: number, z: number): Box {
-        return new Box(new Vec3(x, y, z))
+        return new Box(new Vec3(x / 2, y / 2, z / 2))
     }
 
     setMass(mass: number) {

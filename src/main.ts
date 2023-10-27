@@ -14,7 +14,7 @@ const eventEmitter = new EventEmitter();
 
 const engineManager = new EngineManager(threeEngine, cannonEngine);
 
-const positionHelper = new PositionHelper(1.5, 10, 1.5);
+const positionHelper = new PositionHelper();
 const blockSizeManager = new BlockSizeManager();
 
 const blockGenerator = new BlockGenerator(positionHelper, blockSizeManager);
@@ -31,7 +31,7 @@ eventEmitter.addListener(CHANGE_AXIS, game.toggleAxes);
 eventEmitter.addListener(ANIMATE_ACTIVE_BLOCK, blockGenerator.changePositionInLastBlock);
 eventEmitter.addListener(UPDATE_BLOCK_POSITION, positionHelper.setPosition);
 eventEmitter.addListener(SYNC_POSITION, blockGenerator.syncBlockPosition)
-eventEmitter.addListener(STABLE_ACTIVE_BLOCK, blockGenerator.makeStable)
+// eventEmitter.addListener(STABLE_ACTIVE_BLOCK, blockGenerator.makeStable)
 
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -44,15 +44,7 @@ window.addEventListener('DOMContentLoaded', () => {
 })
 
 window.addEventListener('click', () => {
-    const isGameStarted = game.getIsGameStarted();
-
-    if (!isGameStarted) eventEmitter.emit(START_GAME, true);
-})
-
-window.addEventListener('click', () => {
     eventEmitter.emit(CHANGE_AXIS);
-
-    eventEmitter.emit(STABLE_ACTIVE_BLOCK);
 })
 
 window.addEventListener('click', () => {
@@ -61,9 +53,21 @@ window.addEventListener('click', () => {
 
     const position = { y, x: 1.5, z: 1.5, [axis]: -15 }
     eventEmitter.emit(UPDATE_BLOCK_POSITION, position);
+    // console.log(positionHelper.getPosition());
     eventEmitter.emit(CREATE_BLOCK);
 
     const gameBlock = blockGenerator.getLastBlock();
 
     eventEmitter.emit(SYNC_BLOCK_WITH_ENGINE, gameBlock);
+})
+
+window.addEventListener('click', () => {
+
+})
+
+
+window.addEventListener('click', () => {
+    const isGameStarted = game.getIsGameStarted();
+
+    if (!isGameStarted) eventEmitter.emit(START_GAME, true);
 })
