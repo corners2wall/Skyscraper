@@ -13,13 +13,17 @@ export default class PositionHelper {
         this.x = x;
         this.y = y;
         this.z = z;
+
+        this.setY = this.setY.bind(this);
+        this.setPosition = this.setPosition.bind(this);
     }
 
     getPosition(): [x: number, y: number, z: number] {
         return [this.x, this.y, this.z]
     }
 
-    setPosition(x: number, y: number, z: number) {
+    // ToDo Change signature
+    setPosition({ x, y, z }) {
         this.x = x;
         this.y = y;
         this.z = z;

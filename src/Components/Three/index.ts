@@ -1,8 +1,9 @@
-import { Mesh, MeshBasicMaterial, PerspectiveCamera, Scene, SphereGeometry, WebGLRenderer } from "three";
+import { PerspectiveCamera, Scene, WebGLRenderer } from "three";
 import ThreeJsEngine from "./ThreeJsEngine";
 import ThreeJsEngineBuilder from "./ThreeJsEngineBuilder";
 import Light from "../ThreeLight/Light";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import ThreeJsEngineAdapter from "./ThreeJsEngineAdapter";
 
 const directionalLight = new Light({ lightType: 'directional', position: [5, 6, 3] })
 
@@ -32,5 +33,7 @@ const threeJsEngine = new ThreeJsEngineBuilder(defaultThreeJsEngine)
     .addItem(directionalLight.getLight())
     .addItem(ambientLight.getLight())
     .build();
+
+export const threeEngineAdapter = new ThreeJsEngineAdapter(threeJsEngine);
 
 export default threeJsEngine;

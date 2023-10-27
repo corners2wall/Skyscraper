@@ -2,6 +2,7 @@ import { Vec3 } from "cannon-es";
 import CannonEngine from "./CannonEngine";
 import CannonEngineBuilder from "./CannonEngineBuilder";
 import CannonItem from "./CannonItem";
+import CannonEngineAdapter from "./CannonEngineAdapter";
 
 const defaultCannonEngine = new CannonEngine({ gravity: new Vec3(0, -9.82, 0) });
 
@@ -11,5 +12,7 @@ ground.quaternion.setFromEuler(-Math.PI / 2, 0, 0)
 const cannonEngine = new CannonEngineBuilder(defaultCannonEngine)
     .addItem(ground)
     .build();
+
+export const cannonEngineAdapter = new CannonEngineAdapter(cannonEngine);
 
 export default cannonEngine;

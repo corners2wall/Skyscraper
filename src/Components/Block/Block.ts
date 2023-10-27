@@ -9,7 +9,7 @@ export default class Block extends Mesh {
         super();
         this.positionHelper = positionHelper;
         this.material = new MeshStandardMaterial({ color: new Color(`hsl(${30 + positionHelper.getY() * 4}, 100%, 50%)`) });
-        this.geometry = new BoxGeometry(...blockSizeManager.getSize());
+        this.geometry = new BoxGeometry(...blockSizeManager.getSizes());
         this.setPosition();
         // this.position.set(positionHelper.getX(),);
     }

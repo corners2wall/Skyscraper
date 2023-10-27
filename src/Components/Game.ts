@@ -1,4 +1,4 @@
-import { ANIMATE_BLOCK } from "../Consts/actions";
+import { ANIMATE_ACTIVE_BLOCK, SYNC_POSITION } from "../Consts/actions";
 import EventEmitter from "../Utils/EventEmitter";
 import EngineManager from "./EngineManager";
 
@@ -6,41 +6,50 @@ type Axes = 'x' | 'z'
 
 // Seems like god object
 export default class Game {
-    private axes: Axes;
+    private axis: Axes;
+    // ToDo Maybe delete this property
     private isGameStarted = false;
 
     constructor(
         private engineManager: EngineManager,
         private eventEmitter: EventEmitter
     ) {
-        this.axes = 'x'
+        this.axis = 'x'
         this.toggleAxes = this.toggleAxes.bind(this);
         this.runAnimateLoop = this.runAnimateLoop.bind(this);
+        this.setIsGameStarted = this.setIsGameStarted.bind(this);
+        this.getIsGameStarted = this.getIsGameStarted.bind(this);
     }
 
     public runAnimateLoop() {
-        const axis = this.getAxes();
+        const axis = this.getAxis();
 
         this.engineManager.animate();
 
-        if (this.isGameStarted) {
-            this.eventEmitter.emit(ANIMATE_BLOCK, { axis });
-        }
+        this.eventEmitter.emit(SYNC_POSITION);
+
+        this.eventEmitter.emit(ANIMATE_ACTIVE_BLOCK, { axis });
 
         requestAnimationFrame(this.runAnimateLoop);
     }
 
-
-    public getAxes() {
-        return this.axes;
+    public getIsGameStarted() {
+        return this.isGameStarted;
     }
 
-    public setAxes(axes: Axes) {
-        this.axes = axes;
+    public setIsGameStarted(isGameStarted: boolean) {
+        this.isGameStarted = isGameStarted;
+    }
+
+    public getAxis() {
+        return this.axis;
+    }
+
+    public setAxis(axes: Axes) {
+        this.axis = axes;
     }
 
     public toggleAxes() {
-        this.axes = this.axes === 'x' ? 'z' : 'x'
+        this.axis = this.axis === 'x' ? 'z' : 'x'
     }
-
 }

@@ -1,4 +1,5 @@
 import { Broadphase, Solver, Vec3 } from "cannon-es";
+import GameBlock from "../Components/GameBlock";
 
 export interface Line {
     start: number;
@@ -35,8 +36,11 @@ export interface WorldOptions {
 }
 
 export interface Factory<T> {
-    // register(key: string, constructor: T): void;
     create(type: string): T
 }
 
 export type MapKey = string | number | Symbol;
+
+export interface GameBlockAdapter {
+    addGameBlockToEngine(gameBlock: GameBlock): void
+}
