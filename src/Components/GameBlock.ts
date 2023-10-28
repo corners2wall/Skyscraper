@@ -1,3 +1,4 @@
+import { Quaternion, Vec3 } from "cannon-es";
 import { Positions } from "../Types/common";
 import quaternionAdapter from "../Utils/quaternionAdapter";
 import vectorAdapter from "../Utils/vectorAdapter";
@@ -10,17 +11,14 @@ export default class GameBlock {
     private block: Block;
     private physicBlock: PhysicBlock;
 
-    constructor(positionHelper: PositionHelper, blockSizeManager: BlockSizeManager) {
+    constructor(positionHelper: PositionHelper, blockSizeManager: BlockSizeManager, mass = 0) {
         this.block = new Block(positionHelper, blockSizeManager);
-        this.physicBlock = new PhysicBlock(positionHelper, blockSizeManager);
+        this.physicBlock = new PhysicBlock(positionHelper, blockSizeManager, mass);
     }
 
     public syncPosition() {
-        // this.block.position.copy(this.physicBlock.position as any)
-        // this.block.quaternion.copy(this.physicBlock.quaternion as any)
-        // console.log(this.block.position);
-        this.block.position.set(...vectorAdapter(this.physicBlock.position));
-        this.block.quaternion.set(...quaternionAdapter(this.physicBlock.quaternion))
+        this.block.position.set(...this.convertVectorToArray(this.physicBlock.position));
+        this.block.quaternion.set(...this.convertQuaternionToArray(this.physicBlock.quaternion))
     }
 
     public changeBlockPosition(positions: Positions) {
@@ -33,5 +31,13 @@ export default class GameBlock {
 
     public getPhysicBlock() {
         return this.physicBlock
+    }
+
+    private convertVectorToArray(vector: Vec3): Positions {
+        return [vector.x, vector.y, vector.z];
+    }
+
+    private convertQuaternionToArray(quaternion: Quaternion): [x: number, y: number, z: number, w: number] {
+        return [quaternion.x, quaternion.y, quaternion.z, quaternion.w];
     }
 }

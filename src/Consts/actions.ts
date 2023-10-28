@@ -23,3 +23,5 @@ export const FIND_INTERSECTION = Symbol('find_intersection');
 export const UPDATE_BLOCK_SIZE = Symbol('update_block_size');
 
 export const DELETE_BLOCK = Symbol('delete-block');
+
+export const UPDATE_CAMERA_POSITION = Symbol('update_camera_position');

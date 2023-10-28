@@ -1,4 +1,4 @@
-import threeEngine from './Components/Three';
+import threeEngine, { camera } from './Components/Three';
 import cannonEngine from './Components/Cannon';
 import EngineManager from './Components/EngineManager';
 import PositionHelper from './Components/PositionHelper';
@@ -6,7 +6,7 @@ import BlockSizeManager from './Components/Block/BlockSizeManager';
 import EventEmitter from './Utils/EventEmitter';
 import BlockGenerator from './Components/Block/BlockGenerator';
 import Game from './Components/Game';
-import { CREATE_BLOCK, ANIMATE_ACTIVE_BLOCK, SYNC_BLOCK_WITH_ENGINE, CHANGE_AXIS, PRERENDER, UPDATE_BLOCK_POSITION, SYNC_POSITION, START_GAME, FIND_INTERSECTION, UPDATE_BLOCK_SIZE, DELETE_BLOCK } from './Consts/actions';
+import { CREATE_BLOCK, ANIMATE_ACTIVE_BLOCK, SYNC_BLOCK_WITH_ENGINE, CHANGE_AXIS, PRERENDER, UPDATE_BLOCK_POSITION, SYNC_POSITION, START_GAME, FIND_INTERSECTION, UPDATE_BLOCK_SIZE, DELETE_BLOCK, UPDATE_CAMERA_POSITION } from './Consts/actions';
 import { threeEngineAdapter } from './Components/Three';
 import { cannonEngineAdapter } from './Components/Cannon';
 import BoxHelper from './Utils/BoxHelper';
@@ -14,7 +14,7 @@ import { MinMaxValues } from './Types/common';
 import Block from './Components/Block/Block';
 import { IntersectionHelper } from './Utils/IntersectionHelper';
 import AxisSizeMapper from './Utils/AxisSizeMapper';
-import { DEFAULT_AXIS_OFFSET } from './Consts/Common';
+import { BLOCK_MASS, DEFAULT_AXIS_OFFSET } from './Consts/Common';
 
 const eventEmitter = new EventEmitter();
 
@@ -42,6 +42,7 @@ eventEmitter.addListener(SYNC_POSITION, blockGenerator.syncBlockPosition)
 eventEmitter.addListener(DELETE_BLOCK, threeEngineAdapter.removeGameBlock);
 eventEmitter.addListener(DELETE_BLOCK, cannonEngineAdapter.removeGameBlock);
 eventEmitter.addListener(DELETE_BLOCK, blockGenerator.removeBlock);
+eventEmitter.addListener(UPDATE_CAMERA_POSITION, camera.updateCameraPosition)
 
 /**
  * Use for pipeline
@@ -49,9 +50,7 @@ eventEmitter.addListener(DELETE_BLOCK, blockGenerator.removeBlock);
 eventEmitter.addListener(FIND_INTERSECTION, BoxHelper.wrapMeshToBox);
 eventEmitter.addListener(FIND_INTERSECTION, BoxHelper.getAxisLine);
 
-// eventEmitter.addListener(STABLE_ACTIVE_BLOCK, blockGenerator.makeStable)
-
-
+// ToDo: simplify
 window.addEventListener('DOMContentLoaded', () => {
     eventEmitter.emit(CREATE_BLOCK);
 
@@ -73,17 +72,30 @@ window.addEventListener('click', () => {
          */
         eventEmitter.emit(DELETE_BLOCK, activeBlock);
 
-
+        // ToDo Make OBSERVER!!!!!!!!!
         // ToDo Simplify
         // Find axis line stable block and active block
         const { [axis]: line1 } = eventEmitter.pipeline<Block, MinMaxValues>(FIND_INTERSECTION, stableBlock.getBlock());
         const { [axis]: line2 } = eventEmitter.pipeline<Block, MinMaxValues>(FIND_INTERSECTION, activeBlock.getBlock());
+        const [x, y, z] = positionHelper.getPosition();
+        const sizeUnit = AxisSizeMapper.axisToSize(axis);
 
         /**
          * Generate Slice Block
          */
 
-        const lineDifference = IntersectionHelper.getLineDifference(line1, line2);
+        const { size: si, start: st } = IntersectionHelper.getLineDifference(line1, line2);
+
+        const pos = { y, x, z, [axis]: st };
+
+        const bs = { ...blockSizeManager.getSizes(), [sizeUnit]: si };
+        eventEmitter.emit(UPDATE_BLOCK_POSITION, pos);
+        eventEmitter.emit(UPDATE_BLOCK_SIZE, bs);
+        eventEmitter.emit(CREATE_BLOCK, BLOCK_MASS);
+
+        const gb = blockGenerator.getLastBlock();
+
+        eventEmitter.emit(SYNC_BLOCK_WITH_ENGINE, gb);
 
 
         /**
@@ -94,15 +106,12 @@ window.addEventListener('click', () => {
         //ToDo redo
         const { size, start } = IntersectionHelper.getLineIntersection(line1, line2);
 
-        const [x, y, z] = positionHelper.getPosition()
         const position = { y, x, z, [axis]: start };
 
-        const sizeUnit = AxisSizeMapper.axisToSize(axis);
         const blockSize = { ...blockSizeManager.getSizes(), [sizeUnit]: size };
         eventEmitter.emit(UPDATE_BLOCK_POSITION, position);
         eventEmitter.emit(UPDATE_BLOCK_SIZE, blockSize);
         eventEmitter.emit(CREATE_BLOCK);
-
 
         const gameBlock = blockGenerator.getLastBlock();
 
@@ -127,6 +136,9 @@ window.addEventListener('click', () => {
     eventEmitter.emit(SYNC_BLOCK_WITH_ENGINE, gameBlock);
 })
 
+window.addEventListener('click', () => {
+    eventEmitter.emit(UPDATE_CAMERA_POSITION);
+})
 
 
 window.addEventListener('click', () => {

@@ -1,22 +1,17 @@
-import { PerspectiveCamera, Scene, WebGLRenderer } from "three";
+import { Scene, WebGLRenderer } from "three";
 import ThreeJsEngine from "./ThreeJsEngine";
 import ThreeJsEngineBuilder from "./ThreeJsEngineBuilder";
 import Light from "../ThreeLight/Light";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import ThreeJsEngineAdapter from "./ThreeJsEngineAdapter";
+import Camera from "../Camera";
 
 const directionalLight = new Light({ lightType: 'directional', position: [5, 6, 3] })
 
 const ambientLight = new Light({ lightType: 'ambient' })
 
-const camera = new PerspectiveCamera(65, window.innerWidth / window.innerHeight);
+export const camera = new Camera();
 
 const canvas = document.querySelector('.canvas') as HTMLCanvasElement;
-
-// ToDo: remove this
-const o = new OrbitControls(camera, canvas);
-
-camera.position.set(1, 1, 10);
 
 const scene = new Scene();
 

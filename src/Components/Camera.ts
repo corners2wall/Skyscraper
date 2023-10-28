@@ -1,19 +1,23 @@
-import { PerspectiveCamera } from "three";
+import { PerspectiveCamera, Vector3 } from "three";
 
 export default class Camera extends PerspectiveCamera {
-    private floorCounter: number
+    private lookAtPosition = new Vector3(1, -1, 0)
 
     constructor() {
         super(75, window.innerWidth / window.innerHeight)
 
         this.position.set(4, 4, 7);
-        this.floorCounter = 0
-        this.lookAt(1, this.floorCounter, 0);
+        this.lookAt(this.lookAtPosition);
+        this.updateCameraPosition = this.updateCameraPosition.bind(this);
     }
 
-    updateCameraPosition() {
-        this.floorCounter = this.floorCounter + 1;
-        this.lookAt(1, this.floorCounter, 0);
+    public updateCameraPosition() {
+        this.changeLookAtPosition();
+        this.lookAt(this.lookAtPosition);
         this.position.setY(this.position.y + 1)
+    }
+
+    private changeLookAtPosition() {
+        this.lookAtPosition.setY(this.lookAtPosition.y + 1);
     }
 }

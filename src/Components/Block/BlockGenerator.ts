@@ -10,6 +10,7 @@ export default class BlockGenerator {
     private blocks: GameBlock[];
 
     constructor(
+        // ToDo: remove from here, pass as parameters into generateNewBlock function
         private positionHelper: PositionHelper,
         private blockSizeManager: BlockSizeManager
     ) {
@@ -22,8 +23,8 @@ export default class BlockGenerator {
         this.removeBlock = this.removeBlock.bind(this);
     }
 
-    public generateNewBlock() {
-        const gameBlock = new GameBlock(this.positionHelper, this.blockSizeManager);
+    public generateNewBlock(mass: number) {
+        const gameBlock = new GameBlock(this.positionHelper, this.blockSizeManager, mass);
         // debugger;
         // ToDo move from here 
         this.addGameBlockInBlocks(gameBlock);
