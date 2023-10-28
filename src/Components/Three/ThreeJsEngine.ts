@@ -16,8 +16,12 @@ export default class ThreeJsEngine implements Engine {
         this.renderer.render(this.scene, this.camera)
     }
 
-    public addObjectToScene(item: Object3D) {
-        this.scene.add(item);
+    public addObjectToScene(object: Object3D) {
+        this.scene.add(object);
+    }
+
+    public removeObjectFromScene(object: Object3D) {
+        this.scene.remove(object)
     }
 
     public setCamera(camera: Camera) {
@@ -27,4 +31,5 @@ export default class ThreeJsEngine implements Engine {
     public setScene(scene: Scene) {
         this.scene = scene
     }
+
 }

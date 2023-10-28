@@ -18,4 +18,8 @@ export const SYNC_POSITION = Symbol('sync_position');
 
 export const START_GAME = Symbol('start_game');
 
-export const STABLE_ACTIVE_BLOCK = Symbol('stable_active_block');
+export const FIND_INTERSECTION = Symbol('find_intersection');
+
+export const UPDATE_BLOCK_SIZE = Symbol('update_block_size');
+
+export const DELETE_BLOCK = Symbol('delete-block');

@@ -26,5 +26,11 @@ export default class EventEmitter<Events extends MapKey = MapKey> {
         callbacks.forEach((callback) => callback(data));
     }
 
+    pipeline<T, R>(eventType: Events, data: T) {
+        const callbacks = this.get(eventType) || [];
+
+        return callbacks.reduce((res, fn) => fn(res), data) as R
+    }
+
     sequenceEmit() { }
 }

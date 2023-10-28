@@ -13,13 +13,12 @@ const camera = new PerspectiveCamera(65, window.innerWidth / window.innerHeight)
 
 const canvas = document.querySelector('.canvas') as HTMLCanvasElement;
 
+// ToDo: remove this
 const o = new OrbitControls(camera, canvas);
-
 
 camera.position.set(1, 1, 10);
 
 const scene = new Scene();
-
 
 // ToDo: move to entity
 const renderer = new WebGLRenderer({ canvas, });

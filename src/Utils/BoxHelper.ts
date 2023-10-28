@@ -1,12 +1,13 @@
 import { Box3, Mesh } from "three";
-import { Axis, Line } from "../Types/common";
+import { MinMaxValues } from "../Types/common";
 
 export default class BoxHelper {
-    static getAxisLine(box3: Box3, axis: Axis): Line {
-        const start = box3.min[axis];
-        const end = box3.max[axis];
+    static getAxisLine(box3: Box3): MinMaxValues {
+        const x = { start: box3.min.x, end: box3.max.x }
+        const y = { start: box3.min.y, end: box3.max.y }
+        const z = { start: box3.min.z, end: box3.max.z }
 
-        return ({ start, end });
+        return ({ x, y, z });
     }
 
     static wrapMeshToBox(mesh: Mesh): Box3 {

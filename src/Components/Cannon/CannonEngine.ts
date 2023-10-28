@@ -16,4 +16,8 @@ export default class CannonEngine implements Engine {
     public addBody(body: Body) {
         this.world.addBody(body);
     }
+
+    public removeBody(body: Body) {
+        this.world.removeBody(body)
+    }
 }

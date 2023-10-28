@@ -13,6 +13,8 @@ export interface Size {
 
 export type Axis = 'x' | 'y' | 'z';
 
+export type SizeUnit = 'width' | 'height' | 'depth';
+
 export interface Engine {
     render(): void
 }
@@ -23,7 +25,7 @@ export interface Builder<T> {
 
 export type Positions = [x: number, y: number, z: number];
 
-export type Sizes = [width: number, height: number, depth: number];
+export type BlockSize = Record<SizeUnit, number>
 
 export interface WorldOptions {
     gravity?: Vec3;
@@ -42,5 +44,8 @@ export interface Factory<T> {
 export type MapKey = string | number | Symbol;
 
 export interface GameBlockAdapter {
-    addGameBlockToEngine(gameBlock: GameBlock): void
+    addGameBlock(block: GameBlock): void;
+    removeGameBlock(block: GameBlock): void;
 }
+
+export type MinMaxValues = Record<Axis, Line>

@@ -4,10 +4,15 @@ import CannonEngine from "./CannonEngine";
 
 export default class CannonEngineAdapter implements GameBlockAdapter {
     constructor(private engine: CannonEngine) {
-        this.addGameBlockToEngine = this.addGameBlockToEngine.bind(this);
+        this.addGameBlock = this.addGameBlock.bind(this);
+        this.removeGameBlock = this.removeGameBlock.bind(this);
     }
 
-    public addGameBlockToEngine(gameBlock: GameBlock) {
+    public addGameBlock(gameBlock: GameBlock) {
         this.engine.addBody(gameBlock.getPhysicBlock());
+    }
+
+    public removeGameBlock(gameBlock: GameBlock) {
+        this.engine.removeBody(gameBlock.getPhysicBlock());
     }
 }

@@ -1,1 +1,3 @@
-export const GAME_BLOCK_SPEED = 15;
+export const BLOCK_SPEED = 0.15;
+
+export const DEFAULT_AXIS_OFFSET = -15;

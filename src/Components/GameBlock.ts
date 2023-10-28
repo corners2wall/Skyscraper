@@ -16,6 +16,9 @@ export default class GameBlock {
     }
 
     public syncPosition() {
+        // this.block.position.copy(this.physicBlock.position as any)
+        // this.block.quaternion.copy(this.physicBlock.quaternion as any)
+        // console.log(this.block.position);
         this.block.position.set(...vectorAdapter(this.physicBlock.position));
         this.block.quaternion.set(...quaternionAdapter(this.physicBlock.quaternion))
     }

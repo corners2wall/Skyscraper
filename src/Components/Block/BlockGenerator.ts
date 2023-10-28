@@ -1,3 +1,4 @@
+import { BLOCK_SPEED } from "../../Consts/Common";
 import { Axis } from "../../Types/common";
 import GameBlock from "../GameBlock";
 import PositionHelper from "../PositionHelper";
@@ -18,6 +19,7 @@ export default class BlockGenerator {
         this.getLastBlock = this.getLastBlock.bind(this);
         this.changePositionInLastBlock = this.changePositionInLastBlock.bind(this);
         this.makeStable = this.makeStable.bind(this);
+        this.removeBlock = this.removeBlock.bind(this);
     }
 
     public generateNewBlock() {
@@ -31,8 +33,18 @@ export default class BlockGenerator {
         return this.blocks[this.blocks.length - 1]
     }
 
+    public getTwoLastBlock(): GameBlock[] {
+        const blocks = this.getBlocks();
+
+        return blocks.slice(Math.max(blocks.length - 2, 0))
+    }
+
     public getBlocks() {
         return this.blocks
+    }
+
+    public setBlocks(gameBlocks: GameBlock[]) {
+        this.blocks = gameBlocks
     }
 
     public syncBlockPosition() {
@@ -53,11 +65,18 @@ export default class BlockGenerator {
         const lastBlock = this.getLastBlock();
 
         const physicBlock = lastBlock.getPhysicBlock();
-        physicBlock.position[axis] = physicBlock.position[axis] + 0.15;
+        physicBlock.position[axis] = physicBlock.position[axis] + BLOCK_SPEED;
         lastBlock.syncPosition();
+    }
+
+    public removeBlock(gameBlock: GameBlock) {
+        const blocks = this.getBlocks().filter(block => block !== gameBlock);
+
+        this.setBlocks(blocks);
     }
 
     private addGameBlockInBlocks(gameBlock: GameBlock) {
         this.blocks.push(gameBlock);
     }
+
 }
