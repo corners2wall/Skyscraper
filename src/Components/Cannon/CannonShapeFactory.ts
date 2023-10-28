@@ -1,9 +1,7 @@
 import { Box, Plane, Shape, Sphere, Vec3 } from "cannon-es";
-import { Factory } from "../../Types/common";
 
 export type CannonShapeType = 'Sphere' | 'Box' | 'Plane';
 
-// ToDo: redo
 export default class CannonShapeFactory {
 
     static create(type: CannonShapeType): Shape {
@@ -13,23 +11,4 @@ export default class CannonShapeFactory {
 
         throw new Error(`Unknown shapeType: ${type}`)
     }
-    // private factoryMap: Map<string, Shape>
-
-    // constructor() {
-    //     this.factoryMap = new Map();
-    // }
-
-    // register(type: string, constructor: Shape): void {
-    //     this.factoryMap.set(type, constructor);
-    // }
-
-    // public create(type: string): Shape {
-    //     const Constructor = this.factoryMap.get(type);
-
-    //     if (!Constructor) throw new Error('')
-
-    //     Constructor;
-
-    //     return new Constructor();
-    // }
 }

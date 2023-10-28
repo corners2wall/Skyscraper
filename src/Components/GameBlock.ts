@@ -1,7 +1,5 @@
 import { Quaternion, Vec3 } from "cannon-es";
 import { Positions } from "../Types/common";
-import quaternionAdapter from "../Utils/quaternionAdapter";
-import vectorAdapter from "../Utils/vectorAdapter";
 import Block from "./Block/Block";
 import BlockSizeManager from "./Block/BlockSizeManager";
 import PhysicBlock from "./PhysicBlock";

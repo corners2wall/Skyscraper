@@ -22,8 +22,8 @@ export default class PositionHelper {
         return [this.x, this.y, this.z]
     }
 
-    // ToDo Change signature
-    setPosition({ x, y, z }) {
+    // ToDo: Change signature
+    setPosition({ x, y, z }: Record<Axis, number>) {
         this.x = x;
         this.y = y;
         this.z = z;

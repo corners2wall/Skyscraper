@@ -19,14 +19,13 @@ export default class BlockGenerator {
         this.syncBlockPosition = this.syncBlockPosition.bind(this);
         this.getLastBlock = this.getLastBlock.bind(this);
         this.changePositionInLastBlock = this.changePositionInLastBlock.bind(this);
-        this.makeStable = this.makeStable.bind(this);
         this.removeBlock = this.removeBlock.bind(this);
     }
 
     public generateNewBlock(mass: number) {
         const gameBlock = new GameBlock(this.positionHelper, this.blockSizeManager, mass);
-        // debugger;
-        // ToDo move from here 
+
+        // ToDo: move from here 
         this.addGameBlockInBlocks(gameBlock);
     }
 
@@ -52,14 +51,6 @@ export default class BlockGenerator {
         const blocks = this.getBlocks();
 
         blocks.forEach((block) => block.syncPosition())
-    }
-
-    public makeStable() {
-        const lastBlock = this.getLastBlock();
-
-        const physicBlock = lastBlock.getPhysicBlock();
-
-        physicBlock.setMass(10);
     }
 
     public changePositionInLastBlock({ axis }: { axis: Axis }) {
