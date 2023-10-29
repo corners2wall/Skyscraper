@@ -1,13 +1,13 @@
 import { BLOCK_SPEED } from "../../Const/Common";
 import { Axis } from "../../Types/common";
-import GameBlock from "./Block";
+import Block from "./Block";
 import PositionHelper from "../PositionHelper";
 import BlockSizeManager from "./BlockSizeManager";
 
 // ToDo: this class do two things: 1 - create blocks and store them.
 // Fix this behavior
-export default class BlockGenerator {
-    private blocks: GameBlock[];
+export default class Spaghetti  {
+    private blocks: Block[];
 
     constructor(
         // ToDo: remove from here, pass as parameters into generateNewBlock function
@@ -23,17 +23,17 @@ export default class BlockGenerator {
     }
 
     public generateNewBlock(mass: number) {
-        const gameBlock = new GameBlock(this.positionHelper, this.blockSizeManager, mass);
+        const block = new Block(this.positionHelper, this.blockSizeManager, mass);
 
         // ToDo: move from here 
-        this.addGameBlockInBlocks(gameBlock);
+        this.addBlockInBlocks(block);
     }
 
-    public getLastBlock(): GameBlock {
+    public getLastBlock(): Block {
         return this.blocks[this.blocks.length - 1]
     }
 
-    public getTwoLastBlock(): GameBlock[] {
+    public getTwoLastBlock(): Block[] {
         const blocks = this.getBlocks();
 
         return blocks.slice(Math.max(blocks.length - 2, 0))
@@ -43,8 +43,8 @@ export default class BlockGenerator {
         return this.blocks
     }
 
-    public setBlocks(gameBlocks: GameBlock[]) {
-        this.blocks = gameBlocks
+    public setBlocks(blocks: Block[]) {
+        this.blocks = blocks
     }
 
     public syncBlockPosition() {
@@ -61,14 +61,20 @@ export default class BlockGenerator {
         lastBlock.syncPosition();
     }
 
-    public removeBlock(gameBlock: GameBlock) {
-        const blocks = this.getBlocks().filter(block => block !== gameBlock);
+    public removeBlock(removedBlock: Block) {
+        const blocks = this.getBlocks().filter(block => block !== removedBlock);
 
         this.setBlocks(blocks);
     }
 
-    private addGameBlockInBlocks(gameBlock: GameBlock) {
-        this.blocks.push(gameBlock);
+    private addBlockInBlocks(block: Block) {
+        this.blocks.push(block);
     }
 
+}
+
+export class BlockGenerator {
+    public static generateBox() {
+
+    }
 }

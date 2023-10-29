@@ -17,7 +17,7 @@ export const camera = new Camera();
 
 const canvas = document.querySelector('.canvas') as HTMLCanvasElement;
 
-const or = new OrbitControls(camera, canvas);
+// export const or = new OrbitControls(camera, canvas);
 
 const scene = new Scene();
 
@@ -32,7 +32,7 @@ const threeJsEngine = new ThreeJsEngineBuilder(defaultThreeJsEngine)
     .setScene(scene)
     .addItem(directionalLight.getLight())
     .addItem(ambientLight.getLight())
-    .addItem(hel)
+    // .addItem(hel)
     .build();
 
 export const threeEngineAdapter = new ThreeJsEngineAdapter(threeJsEngine);

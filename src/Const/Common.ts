@@ -2,7 +2,7 @@ import { BlockSize, ObjectPosition } from "../Types/common";
 
 export const BLOCK_SPEED = 0.15;
 
-export const DEFAULT_AXIS_OFFSET = -15;
+export const DEFAULT_AXIS_OFFSET = -7.5;
 
 export const BLOCK_MASS = 10;
 
@@ -19,7 +19,7 @@ export const BLOCK_SIZE: BlockSize = {
 }
 
 export const CAMERA_POSITION:ObjectPosition = {
-    x: 4,
-    y: 4,
-    z: 7,
+    x: 6,
+    y: 4.5,
+    z: 6.75,
 }

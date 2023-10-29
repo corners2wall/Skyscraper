@@ -4,13 +4,16 @@ import UiBlock from "./UiBlock";
 import BlockSizeManager from "./BlockSizeManager";
 import PhysicBlock from "./PhysicBlock";
 import PositionHelper from "../PositionHelper";
+import { BoxGeometry, MeshStandardMaterial } from "three";
 
 export default class Block {
     private uiBlock: UiBlock;
     private physicBlock: PhysicBlock;
+    private material = new MeshStandardMaterial();
+    private geometry = new BoxGeometry();
 
     constructor(positionHelper: PositionHelper, blockSizeManager: BlockSizeManager, mass = 0) {
-        this.uiBlock = new UiBlock(positionHelper, blockSizeManager);
+        this.uiBlock = new UiBlock(positionHelper, blockSizeManager, this.geometry, this.material);
         this.physicBlock = new PhysicBlock(positionHelper, blockSizeManager, mass);
     }
 

@@ -11,7 +11,7 @@ import { threeEngineAdapter } from './Components/Three';
 import { cannonEngineAdapter } from './Components/Cannon';
 import BoxHelper from './Utils/BoxHelper';
 import { MinMaxValues } from './Types/common';
-import Block from './Components/Block/UiBlock';
+import UiBlock from './Components/Block/UiBlock';
 import { IntersectionHelper } from './Utils/IntersectionHelper';
 import AxisSizeMapper from './Utils/AxisSizeMapper';
 import { BLOCK_MASS, DEFAULT_AXIS_OFFSET, BLOCK_POSITION, BLOCK_SIZE } from './Const/Common';
@@ -85,8 +85,8 @@ window.addEventListener('click', () => {
         // ToDo Make OBSERVER!!!!!!!!!
         // ToDo Simplify
         // Find axis line stable block and active block
-        const { [axis]: line1 } = eventEmitter.pipeline<Block, MinMaxValues>(FIND_INTERSECTION, stableBlock.getUiBlock());
-        const { [axis]: line2 } = eventEmitter.pipeline<Block, MinMaxValues>(FIND_INTERSECTION, activeBlock.getUiBlock());
+        const { [axis]: line1 } = eventEmitter.pipeline<UiBlock, MinMaxValues>(FIND_INTERSECTION, stableBlock.getUiBlock());
+        const { [axis]: line2 } = eventEmitter.pipeline<UiBlock, MinMaxValues>(FIND_INTERSECTION, activeBlock.getUiBlock());
         const {x, y, z} = positionHelper.getPosition();
         const sizeUnit = AxisSizeMapper.axisToSize(axis);
 
