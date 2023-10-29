@@ -31,6 +31,4 @@ export default class EventEmitter<Events extends MapKey = MapKey> {
 
         return callbacks.reduce((res, fn) => fn(res), data) as R
     }
-
-    sequenceEmit() { }
 }

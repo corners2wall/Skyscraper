@@ -1,0 +1,4 @@
+- [ ] - Add inversify;
+- [ ] - Do refactoring;
+- [ ] - Add readme.md;
+- [ ] - Add article on dev.to;

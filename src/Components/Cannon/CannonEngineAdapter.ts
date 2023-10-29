@@ -1,5 +1,5 @@
 import { GameBlockAdapter } from "../../Types/common";
-import GameBlock from "../GameBlock";
+import GameBlock from "../Block/Block";
 import CannonEngine from "./CannonEngine";
 
 export default class CannonEngineAdapter implements GameBlockAdapter {

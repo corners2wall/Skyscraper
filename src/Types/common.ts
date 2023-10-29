@@ -1,5 +1,5 @@
 import { Broadphase, Solver, Vec3 } from "cannon-es";
-import GameBlock from "../Components/GameBlock";
+import GameBlock from "../Components/Block/Block";
 
 export interface Line {
     start: number;
@@ -24,6 +24,8 @@ export interface Builder<T> {
 }
 
 export type Positions = [x: number, y: number, z: number];
+
+export type ObjectPosition = Record<Axis, number>;
 
 export type BlockSize = Record<SizeUnit, number>
 

@@ -5,6 +5,7 @@ interface Observable<T> {
 /**
  * Just for practice purpose
  */
+// ToDo: maybe remove
 export default class Observer<T> {
     observables: Observable<T>[]
 

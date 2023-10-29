@@ -1,4 +1,5 @@
 import { PerspectiveCamera, Vector3 } from "three";
+import { CAMERA_POSITION } from "../Const/Common";
 
 export default class Camera extends PerspectiveCamera {
     private lookAtPosition = new Vector3(1, -1, 0)
@@ -6,7 +7,7 @@ export default class Camera extends PerspectiveCamera {
     constructor() {
         super(75, window.innerWidth / window.innerHeight)
 
-        this.position.set(4, 4, 7);
+        this.position.set(CAMERA_POSITION.x, CAMERA_POSITION.y, CAMERA_POSITION.z);
         this.lookAt(this.lookAtPosition);
         this.updateCameraPosition = this.updateCameraPosition.bind(this);
     }

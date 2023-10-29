@@ -1,26 +1,41 @@
-import { BoxGeometry, Color, Mesh, MeshStandardMaterial } from "three";
+import { Quaternion, Vec3 } from "cannon-es";
+import { Positions } from "../../Types/common";
+import UiBlock from "./UiBlock";
 import BlockSizeManager from "./BlockSizeManager";
+import PhysicBlock from "./PhysicBlock";
 import PositionHelper from "../PositionHelper";
-import { BlockSize } from "../../Types/common";
 
-export default class Block extends Mesh {
-    private positionHelper: PositionHelper;
+export default class Block {
+    private uiBlock: UiBlock;
+    private physicBlock: PhysicBlock;
 
-    constructor(positionHelper: PositionHelper, blockSizeManager: BlockSizeManager) {
-        super();
-        const blockSize = this.mapBlockSizeToBoxGeometry(blockSizeManager.getSizes());
-        this.positionHelper = positionHelper;
-        this.material = new MeshStandardMaterial({ color: new Color(`hsl(${30 + positionHelper.getY() * 4}, 100%, 50%)`) });
-        this.geometry = new BoxGeometry(...blockSize);
-        this.setPosition();
+    constructor(positionHelper: PositionHelper, blockSizeManager: BlockSizeManager, mass = 0) {
+        this.uiBlock = new UiBlock(positionHelper, blockSizeManager);
+        this.physicBlock = new PhysicBlock(positionHelper, blockSizeManager, mass);
     }
 
-    private mapBlockSizeToBoxGeometry({ width, height, depth }: BlockSize) {
-        return [width, height, depth];
+    public syncPosition() {
+        this.uiBlock.position.set(...this.convertVectorToArray(this.physicBlock.position));
+        this.uiBlock.quaternion.set(...this.convertQuaternionToArray(this.physicBlock.quaternion))
     }
 
-    private setPosition() {
-        this.position.set(this.positionHelper.getX(), this.positionHelper.getY(), this.positionHelper.getZ())
+    public changeBlockPosition(positions: Positions) {
+        this.physicBlock.position.set(...positions);
     }
 
+    public getUiBlock() {
+        return this.uiBlock
+    }
+
+    public getPhysicBlock() {
+        return this.physicBlock
+    }
+
+    private convertVectorToArray({x,y,z}: Vec3): Positions {
+        return [x, y, z];
+    }
+
+    private convertQuaternionToArray({x,y,z,w}: Quaternion): [x: number, y: number, z: number, w: number] {
+        return [x, y, z, w];
+    }
 }

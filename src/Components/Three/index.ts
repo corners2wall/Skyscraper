@@ -1,17 +1,23 @@
-import { Scene, WebGLRenderer } from "three";
+import { DirectionalLightHelper, Scene, WebGLRenderer } from "three";
 import ThreeJsEngine from "./ThreeJsEngine";
 import ThreeJsEngineBuilder from "./ThreeJsEngineBuilder";
 import Light from "../ThreeLight/Light";
 import ThreeJsEngineAdapter from "./ThreeJsEngineAdapter";
 import Camera from "../Camera";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
-const directionalLight = new Light({ lightType: 'directional', position: [5, 6, 3] })
+const directionalLight = new Light({ lightType: 'directional', position: [1, 2, 6] });
+directionalLight.setIntensity(2);
+const hel = new  DirectionalLightHelper(directionalLight.getLight());
 
 const ambientLight = new Light({ lightType: 'ambient' })
+
 
 export const camera = new Camera();
 
 const canvas = document.querySelector('.canvas') as HTMLCanvasElement;
+
+const or = new OrbitControls(camera, canvas);
 
 const scene = new Scene();
 
@@ -26,6 +32,7 @@ const threeJsEngine = new ThreeJsEngineBuilder(defaultThreeJsEngine)
     .setScene(scene)
     .addItem(directionalLight.getLight())
     .addItem(ambientLight.getLight())
+    .addItem(hel)
     .build();
 
 export const threeEngineAdapter = new ThreeJsEngineAdapter(threeJsEngine);

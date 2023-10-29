@@ -1,24 +1,11 @@
 import { BlockSize } from "../../Types/common";
 
 export default class BlockSizeManager {
-    private static INITIAL_WIDTH = 3;
-    private static INITIAL_HEIGHT = 1;
-    private static INITIAL_DEPTH = 3;
-
-    private static instance: BlockSizeManager
-
-    private width: number;
-    private height: number;
-    private depth: number;
-
-    constructor() {
-        if (BlockSizeManager.instance) return BlockSizeManager.instance
-
-        this.width = BlockSizeManager.INITIAL_WIDTH;
-        this.height = BlockSizeManager.INITIAL_HEIGHT;
-        this.depth = BlockSizeManager.INITIAL_DEPTH;
-
-        BlockSizeManager.instance = this;
+    constructor(
+        private width: number,
+        private height: number,
+        private depth: number,
+    ) {
         this.setSizes = this.setSizes.bind(this);
     }
 

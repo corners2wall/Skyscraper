@@ -1,18 +1,19 @@
-import { ANIMATE_ACTIVE_BLOCK, SYNC_POSITION } from "../Consts/actions";
+import { ANIMATE_ACTIVE_BLOCK, SYNC_POSITION } from "../Const/actions";
 import EventEmitter from "../Utils/EventEmitter";
 import EngineManager from "./EngineManager";
-
-type Axes = 'x' | 'z'
+import Stats from 'stats.js';
+import { Axis } from "../Types/common";
 
 // Seems like god object
 export default class Game {
-    private axis: Axes;
+    private axis: Axis;
     // ToDo Maybe delete this property
     private isGameStarted = false;
 
     constructor(
         private engineManager: EngineManager,
-        private eventEmitter: EventEmitter
+        private eventEmitter: EventEmitter,
+        private stats: Stats
     ) {
         this.axis = 'x'
         this.toggleAxes = this.toggleAxes.bind(this);
@@ -22,6 +23,7 @@ export default class Game {
     }
 
     public runAnimateLoop() {
+        this.stats.begin()
         const axis = this.getAxis();
 
         this.engineManager.animate();
@@ -30,6 +32,7 @@ export default class Game {
 
         this.eventEmitter.emit(ANIMATE_ACTIVE_BLOCK, { axis });
 
+        this.stats.end();
         requestAnimationFrame(this.runAnimateLoop);
     }
 
@@ -45,7 +48,7 @@ export default class Game {
         return this.axis;
     }
 
-    public setAxis(axes: Axes) {
+    public setAxis(axes: Axis) {
         this.axis = axes;
     }
 

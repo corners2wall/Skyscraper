@@ -9,6 +9,7 @@ interface LightOptions {
 }
 
 // Wrong implementation
+// ToDo make with builder pattern
 export default class Light {
     private light: ThreeLight
 
@@ -29,5 +30,9 @@ export default class Light {
 
     public getLight() {
         return this.light
+    }
+
+    public setIntensity(intensity: number) {
+        this.light.intensity = intensity;
     }
 }

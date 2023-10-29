@@ -1,6 +1,6 @@
-import { BLOCK_SPEED } from "../../Consts/Common";
+import { BLOCK_SPEED } from "../../Const/Common";
 import { Axis } from "../../Types/common";
-import GameBlock from "../GameBlock";
+import GameBlock from "./Block";
 import PositionHelper from "../PositionHelper";
 import BlockSizeManager from "./BlockSizeManager";
 
