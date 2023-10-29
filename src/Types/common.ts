@@ -43,7 +43,7 @@ export interface Factory<T> {
     create(type: string): T
 }
 
-export type MapKey = string | number | Symbol;
+export type MapKey = string | number | symbol;
 
 export interface GameBlockAdapter {
     addGameBlock(block: GameBlock): void;
