@@ -2,3 +2,6 @@
 - [ ] - Do refactoring;
 - [ ] - Add readme.md;
 - [ ] - Add article on dev.to;
+- [ ] - place initial block on center and move to bottom;
+- [ ] - less pixels;
+- [ ] - add bind decorator;

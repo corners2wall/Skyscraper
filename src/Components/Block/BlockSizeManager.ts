@@ -18,29 +18,4 @@ export default class BlockSizeManager {
         this.height = height;
         this.depth = depth;
     }
-
-    public setWidth(width: number) {
-        this.width = width;
-    }
-
-    public getWidth() {
-        return this.width
-    }
-
-    public setHeight(height: number) {
-        this.height = height;
-    }
-
-    public getHeight() {
-        return this.height;
-    }
-
-    public setDepth(depth: number) {
-        this.depth = depth
-    }
-
-    public getDepth() {
-        return this.depth
-    }
-
 }
