@@ -2,7 +2,7 @@ import { BoxGeometry, Color, Mesh, MeshStandardMaterial } from "three";
 import BlockSizeManager from "./BlockSizeManager";
 import PositionHelper from "../PositionHelper";
 
-export default class UiBlock extends Mesh {
+export default class UiBlock extends Mesh<BoxGeometry, MeshStandardMaterial> {
     constructor(
         positionHelper: PositionHelper,
         blockSizeManager: BlockSizeManager,
@@ -11,10 +11,10 @@ export default class UiBlock extends Mesh {
     ) {
         super(geometry, material);
 
-        const {x,y,z} = positionHelper.getPosition()
-        const {width, depth, height} =  blockSizeManager.getSizes();
+        const { x, y, z } = positionHelper.getPosition()
+        const { width, depth, height } = blockSizeManager.getSizes();
 
-        this.position.set(x,y,z);
+        this.position.set(x, y, z);
         this.geometry.scale(width, height, depth)
         this.material.color = this.generateColor(y);
     }
