@@ -5,3 +5,4 @@
 - [ ] - place initial block on center and move to bottom;
 - [ ] - less pixels;
 - [ ] - add bind decorator;
+- [ ] - maybe use rxjs instance of my custom mediator

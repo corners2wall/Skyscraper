@@ -1,34 +1,30 @@
 import { MapKey } from "../Types/common";
 
+type AnyFunction = (...args: any[]) => any;
+
 export default class EventEmitter<Events extends MapKey = MapKey> {
-    eventMap: Map<Events, any[]>;
-    constructor() {
-        this.eventMap = new Map();
-    }
+  eventMap: Map<Events, AnyFunction[]>;
+  constructor() {
+    this.eventMap = new Map();
+  }
 
-    private get(key: Events) {
-        return this.eventMap.get(key);
-    }
+  private get(key: Events) {
+    return this.eventMap.get(key);
+  }
 
-    addListener(eventType: Events, listener: any) {
-        const callbacks = this.get(eventType) || [];
+  addListener(eventType: Events, listener: AnyFunction) {
+    const callbacks = this.get(eventType) || [];
 
-        this.eventMap.set(eventType, [...callbacks, listener]);
-    }
+    this.eventMap.set(eventType, [...callbacks, listener]);
+  }
 
-    removeListener(eventType: Events, listener: any) {
-        (this.get(eventType) || []).filter((callback) => callback !== listener);
-    }
+  removeListener(eventType: Events, listener: AnyFunction) {
+    (this.get(eventType) || []).filter((callback) => callback !== listener);
+  }
 
-    emit(eventType: Events, data?: any) {
-        const callbacks = this.get(eventType) || [];
+  emit(eventType: Events, ...data: any) {
+    const callbacks = this.get(eventType) || [];
 
-        callbacks.forEach((callback) => callback(data));
-    }
-
-    pipeline<T, R>(eventType: Events, data: T) {
-        const callbacks = this.get(eventType) || [];
-
-        return callbacks.reduce((res, fn) => fn(res), data) as R
-    }
+    callbacks.forEach((callback) => callback(...data));
+  }
 }

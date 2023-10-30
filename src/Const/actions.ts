@@ -16,10 +16,10 @@ export const SYNC_POSITION = Symbol('sync_position');
 
 export const START_GAME = Symbol('start_game');
 
-export const FIND_INTERSECTION = Symbol('find_intersection');
-
-export const UPDATE_BLOCK_SIZE = Symbol('update_block_size');
+export const CHANGE_BLOCK_SIZE = Symbol('change_block_size');
 
 export const DELETE_BLOCK = Symbol('delete-block');
 
-export const UPDATE_CAMERA_POSITION = Symbol('update_camera_position');
+export const CHANGE_CAMERA_POSITION = Symbol('change_camera_position');
+
+export const GET_AXIS_LINE = Symbol('get_axis_line');

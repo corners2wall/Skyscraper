@@ -1,25 +1,19 @@
 import { BoxGeometry, Color, Mesh, MeshStandardMaterial } from "three";
-import BlockSizeManager from "./BlockSizeManager";
-import PositionHelper from "../PositionHelper";
+import { BlockSize, ObjectPosition } from "../../Types/common";
 
 export default class UiBlock extends Mesh<BoxGeometry, MeshStandardMaterial> {
-    constructor(
-        positionHelper: PositionHelper,
-        blockSizeManager: BlockSizeManager,
-        geometry: BoxGeometry,
-        material: MeshStandardMaterial,
-    ) {
-        super(geometry, material);
+  constructor(
+    { x, y, z }: ObjectPosition,
+    { width, depth, height }: BlockSize,
+  ) {
+    super(new BoxGeometry(), new MeshStandardMaterial());
 
-        const { x, y, z } = positionHelper.getPosition()
-        const { width, depth, height } = blockSizeManager.getSizes();
+    this.position.set(x, y, z);
+    this.geometry.scale(width, height, depth)
+    this.material.color = this.generateColor(y);
+  }
 
-        this.position.set(x, y, z);
-        this.geometry.scale(width, height, depth)
-        this.material.color = this.generateColor(y);
-    }
-
-    private generateColor(value: number): Color {
-        return new Color(`hsl(${30 + value * 4}, 100%, 50%)`)
-    }
+  private generateColor(value: number): Color {
+    return new Color(`hsl(${30 + value * 4}, 100%, 50%)`)
+  }
 }
