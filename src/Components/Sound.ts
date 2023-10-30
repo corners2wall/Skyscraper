@@ -28,16 +28,19 @@ export default class Sound implements ISound {
     } else if (count > 0) {
       this.audio.loop = false;
       this.audio.addEventListener('ended', () => {
-        if (count > 1) {
-          count--;
-          this.audio.currentTime = 0;
-          this.audio.play();
-        }
+        this.decreaseCounter(count);
       });
     }
   }
 
   setVolume(value: number) {
     this.audio.volume = value;
+  }
+  private decreaseCounter(count: number) {
+    if (count > 1) {
+      count--;
+      this.audio.currentTime = 0;
+      this.audio.play();
+    }
   }
 }
