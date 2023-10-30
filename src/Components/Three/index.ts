@@ -28,12 +28,12 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 const defaultThreeJsEngine = new ThreeJsEngine(renderer);
 
 const threeJsEngine = new ThreeJsEngineBuilder(defaultThreeJsEngine)
-    .setCamera(camera)
-    .setScene(scene)
-    .addItem(directionalLight.getLight())
-    .addItem(ambientLight.getLight())
-    // .addItem(hel)
-    .build();
+  .setCamera(camera)
+  .setScene(scene)
+  .addItem(directionalLight.getLight())
+  .addItem(ambientLight.getLight())
+  // .addItem(hel)
+  .build();
 
 export const threeEngineAdapter = new ThreeJsEngineAdapter(threeJsEngine);
 
