@@ -50,6 +50,43 @@ We welcome contributors to join our project and help make it even better. Whethe
 
 - **Documentation**: Help us improve our documentation to make it more accessible and informative.
 
+    ### How to install and add airbnb into eslint
+    
+      This setting helps enhances Airbnb's ESLint config with TypeScript support
+      
+      1. Setup regular Airbnb config
+         `npm i eslint-config-airbnb`
+      2. Install dependencies (and peer dependencies)
+      
+      ```
+      npm install eslint-config-airbnb-typescript \
+                  @typescript-eslint/eslint-plugin@^6.0.0 \
+                  @typescript-eslint/parser@^6.0.0 \
+                  --save-dev
+      ```
+      
+      3. Configure ESLint
+         Within your ESLint config file:
+      
+      ```
+      extends: [
+        'airbnb',
+      + 'airbnb-typescript'
+      ]
+      ```
+      
+      4. Configure the ESLint TypeScript parser
+         Next configure the ESLint file:
+      
+      ```
+      + parserOptions: {
+      +   project: './tsconfig.json'
+      + }
+      ```
+      
+      5. Run ESLint
+         `npx eslint`
+
 - **Testing**: Play the game, test it thoroughly, and provide feedback on your experience.
 
 - **Spread the Word**: Enjoyed playing Skyscraper? Share it with your friends and on social media.
