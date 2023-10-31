@@ -49,3 +49,10 @@ export interface GameBlockAdapter {
   addGameBlock(block: GameBlock): void;
   removeGameBlock(block: GameBlock): void;
 }
+
+export interface BlockCommand {
+  execute(...args: any[]): {
+    position: ObjectPosition,
+    size: BlockSize
+  }
+}

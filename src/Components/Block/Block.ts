@@ -5,8 +5,8 @@ import PhysicBlock from "./PhysicBlock";
 
 export default class Block {
   constructor(
-    private uiBlock: UiBlock,
-    private physicBlock: PhysicBlock,
+    protected uiBlock: UiBlock,
+    protected physicBlock: PhysicBlock,
   ) { }
 
   public syncPosition() {

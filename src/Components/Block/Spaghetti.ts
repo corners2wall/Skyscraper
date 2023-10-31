@@ -1,81 +1,50 @@
-import { BLOCK_SPEED } from "../../Const/Common";
-import { Axis } from "../../Types/common";
+import { BLOCK_MASS } from "../../Const/Common";
 import Block from "./Block";
 import PositionHelper from "../PositionHelper";
 import BlockSizeManager from "./BlockSizeManager";
 import PhysicBlock from "./PhysicBlock";
 import UiBlock from "./UiBlock";
+import EventEmitter from "../../Utils/EventEmitter";
+import { ADD_BLOCK_IN_STACK, SYNC_BLOCK_WITH_ENGINE } from "../../Const/actions";
 
 // ToDo: this class do two things: 1 - create blocks and store them.
 // Fix this behavior
 export default class Spaghetti {
-  private blocks: Block[];
 
   constructor(
     // ToDo: remove from here, pass as parameters into generateNewBlock function
     private positionHelper: PositionHelper,
-    private blockSizeManager: BlockSizeManager
+    private blockSizeManager: BlockSizeManager,
+    private eventEmitter: EventEmitter,
   ) {
-    this.blocks = [];
-    this.generateNewBlock = this.generateNewBlock.bind(this);
-    this.syncBlockPosition = this.syncBlockPosition.bind(this);
-    this.getLastBlock = this.getLastBlock.bind(this);
-    this.changePositionInLastBlock = this.changePositionInLastBlock.bind(this);
-    this.removeBlock = this.removeBlock.bind(this);
+    this.generateBlock = this.generateBlock.bind(this);
+    this.generateBlockPart = this.generateBlockPart.bind(this);
   }
 
-  public generateNewBlock(mass: number) {
+  public generateBlock() {
     const position = this.positionHelper.getPosition();
     const size = this.blockSizeManager.getSizes();
 
     const uiBlock = new UiBlock(position, size);
-    const physicBlock = new PhysicBlock(position, size, mass);
+    const physicBlock = new PhysicBlock(position, size);
 
     const block = new Block(uiBlock, physicBlock);
 
-    // ToDo: move from here 
-    this.addBlockInBlocks(block);
+    this.eventEmitter.emit(ADD_BLOCK_IN_STACK, block);
+    this.eventEmitter.emit(SYNC_BLOCK_WITH_ENGINE, block);
   }
 
-  public getLastBlock(): Block {
-    return this.blocks[this.blocks.length - 1]
-  }
+  // ???
+  public generateBlockPart() {
+    const position = this.positionHelper.getPosition();
+    const size = this.blockSizeManager.getSizes();
 
-  public getTwoLastBlock(): Block[] {
-    const blocks = this.getBlocks();
+    const uiBlock = new UiBlock(position, size);
+    const physicBlock = new PhysicBlock(position, size, BLOCK_MASS);
 
-    return blocks.slice(Math.max(blocks.length - 2, 0))
-  }
+    const block = new Block(uiBlock, physicBlock);
 
-  public getBlocks() {
-    return this.blocks
-  }
-
-  public setBlocks(blocks: Block[]) {
-    this.blocks = blocks
-  }
-
-  public syncBlockPosition() {
-    const blocks = this.getBlocks();
-
-    blocks.forEach((block) => block.syncPosition())
-  }
-
-  public changePositionInLastBlock({ axis }: { axis: Axis }) {
-    const lastBlock = this.getLastBlock();
-
-    const physicBlock = lastBlock.getPhysicBlock();
-    physicBlock.position[axis] = physicBlock.position[axis] + BLOCK_SPEED;
-    lastBlock.syncPosition();
-  }
-
-  public removeBlock(removedBlock: Block) {
-    const blocks = this.getBlocks().filter(block => block !== removedBlock);
-
-    this.setBlocks(blocks);
-  }
-
-  private addBlockInBlocks(block: Block) {
-    this.blocks.push(block);
+    this.eventEmitter.emit(ADD_BLOCK_IN_STACK, block);
+    this.eventEmitter.emit(SYNC_BLOCK_WITH_ENGINE, block);
   }
 }

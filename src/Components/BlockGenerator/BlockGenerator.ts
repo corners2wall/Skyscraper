@@ -1,42 +1,34 @@
-import { Axis } from "../../Types/common";
+import { Axis, BlockCommand } from "../../Types/common";
 import BoxHelper from "../../Utils/BoxHelper";
 import { IntersectionHelper } from "../../Utils/IntersectionHelper";
 import Block from "../Block/Block";
-import BlockSizeManager from "../Block/BlockSizeManager";
 import PhysicBlock from "../Block/PhysicBlock";
 import UiBlock from "../Block/UiBlock";
-import PositionHelper from "../PositionHelper";
 
 export default abstract class BlockGenerator {
   protected intersectionHelper = IntersectionHelper
   protected boxHelper = BoxHelper
+  private command: BlockCommand
 
   constructor(
-    protected positionHelper: PositionHelper,
-    protected blockSizeManager: BlockSizeManager,
   ) {
-    this.blockSizeManager = blockSizeManager;
-    this.positionHelper = positionHelper;
   }
 
   public template(axis: Axis, mass: number) {
-    this.setPosition(axis);
-    this.setSize(axis);
+    const { position, size } = this.command.execute();
 
-    const block = this.generateBlock(mass);
+    return this.generateBlock(position, size, mass);
   }
 
-  private generateBlock(mass: number): Block {
-    const position = this.positionHelper.getPosition();
-    const size = this.blockSizeManager.getSizes();
 
+  private generateBlock(position, size, mass: number): Block {
     const uiBlock = new UiBlock(position, size);
     const physicBlock = new PhysicBlock(position, size, mass);
 
     return new Block(uiBlock, physicBlock);
   }
 
-  protected abstract setPosition(axis: Axis): void
-
-  protected abstract setSize(axis: Axis): void
+  public setCommand(command: BlockCommand) {
+    this.command = command;
+  }
 }

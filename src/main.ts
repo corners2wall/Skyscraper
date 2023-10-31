@@ -6,15 +6,17 @@ import BlockSizeManager from './Components/Block/BlockSizeManager';
 import EventEmitter from './Utils/EventEmitter';
 import BlockGenerator from './Components/Block/Spaghetti';
 import Game from './Components/Game';
-import { CREATE_BLOCK, ANIMATE_ACTIVE_BLOCK, SYNC_BLOCK_WITH_ENGINE, CHANGE_AXIS, PRERENDER, CHANGE_POSITION, SYNC_POSITION, START_GAME, CHANGE_BLOCK_SIZE, DELETE_BLOCK, CHANGE_CAMERA_POSITION, GET_AXIS_LINE } from './Const/actions';
+import { CREATE_BLOCK, ANIMATE_ACTIVE_BLOCK, SYNC_BLOCK_WITH_ENGINE, CHANGE_AXIS, PRERENDER, CHANGE_POSITION, SYNC_POSITION, START_GAME, CHANGE_BLOCK_SIZE, DELETE_BLOCK, CHANGE_CAMERA_POSITION, GET_AXIS_LINE, CREATE_BLOCK_PART, ADD_BLOCK_IN_STACK } from './Const/actions';
 import { threeEngineAdapter } from './Components/Three';
 import { cannonEngineAdapter } from './Components/Cannon';
 import BoxHelper from './Utils/BoxHelper';
-import { IntersectionHelper } from './Utils/IntersectionHelper';
-import AxisSizeMapper from './Utils/AxisSizeMapper';
-import { BLOCK_MASS, DEFAULT_AXIS_OFFSET, BLOCK_POSITION, BLOCK_SIZE } from './Const/Common';
+import { BLOCK_POSITION, BLOCK_SIZE } from './Const/Common';
 import Stats from './Components/Stats';
 import './style.css';
+import StableBlockCommand from './Components/BlockGenerator/StableBlockCommand';
+import OffsetBlockCommand from './Components/BlockGenerator/OffsetBlockCommand';
+import SliceBlockCommand from './Components/BlockGenerator/SliceBlockCommand';
+import BlockStack from './Components/Block/BlockStack';
 
 /**
  * Setup instances
@@ -32,36 +34,42 @@ const blockSizeManager = new BlockSizeManager(
   BLOCK_SIZE.height,
   BLOCK_SIZE.depth,
 );
-const blockGenerator = new BlockGenerator(positionHelper, blockSizeManager);
+const blockGenerator = new BlockGenerator(positionHelper, blockSizeManager, eventEmitter);
+const blocksStack = new BlockStack();
 const game = new Game(engineManager, eventEmitter, stats);
+
+// ToDo: PASS FUNCTION TO METHOD FOR CALCULATE POSITION AND SIZE
+// ToDo: MAYBE ADD TWO POSITION HELPER FIRST - FOR BLOCK, SECOND FOR SLICE BLOCK
+const stableBlockCommand = new StableBlockCommand(positionHelper, blockSizeManager);
+const offsetBlockCommand = new OffsetBlockCommand(positionHelper, blockSizeManager)
+const sliceBlockCommand = new SliceBlockCommand(positionHelper, blockSizeManager);
+
 
 /**
  * Callbacks on events
  */
 eventEmitter.addListener(START_GAME, game.setIsGameStarted)
 eventEmitter.addListener(START_GAME, game.runAnimateLoop);
-eventEmitter.addListener(CREATE_BLOCK, blockGenerator.generateNewBlock);
+eventEmitter.addListener(CREATE_BLOCK, blockGenerator.generateBlock);
+eventEmitter.addListener(CREATE_BLOCK_PART, blockGenerator.generateBlockPart)
 eventEmitter.addListener(PRERENDER, engineManager.animate);
 eventEmitter.addListener(SYNC_BLOCK_WITH_ENGINE, threeEngineAdapter.addGameBlock);
 eventEmitter.addListener(SYNC_BLOCK_WITH_ENGINE, cannonEngineAdapter.addGameBlock);
 eventEmitter.addListener(CHANGE_AXIS, game.toggleAxes);
-eventEmitter.addListener(ANIMATE_ACTIVE_BLOCK, blockGenerator.changePositionInLastBlock);
+eventEmitter.addListener(ANIMATE_ACTIVE_BLOCK, blocksStack.changePositionInLastBlock);
 eventEmitter.addListener(CHANGE_POSITION, positionHelper.setPosition);
 eventEmitter.addListener(CHANGE_BLOCK_SIZE, blockSizeManager.setSizes)
-eventEmitter.addListener(SYNC_POSITION, blockGenerator.syncBlockPosition)
+eventEmitter.addListener(SYNC_POSITION, blocksStack.syncBlockPosition)
 eventEmitter.addListener(DELETE_BLOCK, threeEngineAdapter.removeGameBlock);
 eventEmitter.addListener(DELETE_BLOCK, cannonEngineAdapter.removeGameBlock);
-eventEmitter.addListener(DELETE_BLOCK, blockGenerator.removeBlock);
+eventEmitter.addListener(DELETE_BLOCK, blocksStack.removeBlock);
 eventEmitter.addListener(CHANGE_CAMERA_POSITION, camera.updateCameraPosition)
 eventEmitter.addListener(GET_AXIS_LINE, BoxHelper.getAxisLineCannon);
+eventEmitter.addListener(ADD_BLOCK_IN_STACK, blocksStack.addBlock)
 
 window.addEventListener('DOMContentLoaded', () => {
-  // also generate block
   eventEmitter.emit(CREATE_BLOCK);
 
-  const block = blockGenerator.getLastBlock();
-
-  eventEmitter.emit(SYNC_BLOCK_WITH_ENGINE, block);
   eventEmitter.emit(PRERENDER);
 })
 
@@ -70,69 +78,21 @@ window.addEventListener('click', () => {
   const axis = game.getAxis();
 
   if (isGameStarted) {
-    const [stableBlock, activeBlock] = blockGenerator.getTwoLastBlock();
+    const [stableBlock, activeBlock] = blocksStack.getLastBlocks(2);
 
-    /**
-     * Delete Animate block
-     */
     eventEmitter.emit(DELETE_BLOCK, activeBlock);
 
-    // ToDo Make OBSERVER!!!!!!!!!
-    // ToDo Simplify
-    // Find axis line stable block and active block
-    const box1 = BoxHelper.wrapMeshToBox(stableBlock.getUiBlock());
-    const line1 = BoxHelper.getAxisLine(box1, axis);
+    const slice = sliceBlockCommand.execute(axis, stableBlock.getUiBlock(), activeBlock.getUiBlock());
+    eventEmitter.emit(CHANGE_POSITION, slice.position);
+    eventEmitter.emit(CHANGE_BLOCK_SIZE, slice.size);
+    eventEmitter.emit(CREATE_BLOCK_PART);
 
-    const box2 = BoxHelper.wrapMeshToBox(activeBlock.getUiBlock());
-    const line2 = BoxHelper.getAxisLine(box2, axis)
-
-    const { x, y, z } = positionHelper.getPosition();
-
-    const sizeUnit = AxisSizeMapper.axisToSize(axis);
-
-    /**
-     * Generate Slice Block
-     */
-
-    const { size: si, start: st } = IntersectionHelper.getLineDifference(line1, line2);
-
-    const pos = { y, x, z, [axis]: st };
-
-    const bs = { ...blockSizeManager.getSizes(), [sizeUnit]: si };
-    eventEmitter.emit(CHANGE_POSITION, pos);
-    eventEmitter.emit(CHANGE_BLOCK_SIZE, bs);
-    eventEmitter.emit(CREATE_BLOCK, BLOCK_MASS);
-
-    const gb = blockGenerator.getLastBlock();
-    console.log(gb);
-
-    eventEmitter.emit(SYNC_BLOCK_WITH_ENGINE, gb);
-
-    /**
-     * Generate Stable Block
-     */
-
-    //ToDo redo
-    const { size, start } = IntersectionHelper.getLineIntersection(line1, line2);
-
-    const position = { y, x, z, [axis]: start };
-
-    const blockSize = { ...blockSizeManager.getSizes(), [sizeUnit]: size };
-    eventEmitter.emit(CHANGE_POSITION, position);
-    eventEmitter.emit(CHANGE_BLOCK_SIZE, blockSize);
+    const stable = stableBlockCommand.execute(axis, stableBlock.getUiBlock(), activeBlock.getUiBlock());
+    eventEmitter.emit(CHANGE_POSITION, stable.position);
+    eventEmitter.emit(CHANGE_BLOCK_SIZE, stable.size);
     eventEmitter.emit(CREATE_BLOCK);
-
-    const block = blockGenerator.getLastBlock();
-
-    eventEmitter.emit(SYNC_BLOCK_WITH_ENGINE, block);
   }
 })
-
-// FLOW 
-// SET/GET SIZE
-// SET/GET POSITION
-// CREATE BLOCK 
-// SYNC WITH ENGINE
 
 window.addEventListener('click', () => {
   eventEmitter.emit(CHANGE_AXIS);
@@ -140,15 +100,11 @@ window.addEventListener('click', () => {
 
 window.addEventListener('click', () => {
   const axis = game.getAxis();
-  const { x, y, z } = positionHelper.getPosition()
-  const position = { x, y: y + 1, z, [axis]: DEFAULT_AXIS_OFFSET }
 
-  eventEmitter.emit(CHANGE_POSITION, position);
+  const offset = offsetBlockCommand.execute(axis);
+  eventEmitter.emit(CHANGE_POSITION, offset.position);
+  eventEmitter.emit(CHANGE_BLOCK_SIZE, offset.size);
   eventEmitter.emit(CREATE_BLOCK);
-
-  const block = blockGenerator.getLastBlock();
-
-  eventEmitter.emit(SYNC_BLOCK_WITH_ENGINE, block);
 })
 
 window.addEventListener('click', () => {
