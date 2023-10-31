@@ -6,10 +6,10 @@ import PhysicBlock from "./PhysicBlock";
 import UiBlock from "./UiBlock";
 import EventEmitter from "../../Utils/EventEmitter";
 import { ADD_BLOCK_IN_STACK, SYNC_BLOCK_WITH_ENGINE } from "../../Const/actions";
+import { BlockCommand } from "../../Types/common";
 
-// ToDo: this class do two things: 1 - create blocks and store them.
-// Fix this behavior
 export default class Spaghetti {
+  private command: BlockCommand;
 
   constructor(
     // ToDo: remove from here, pass as parameters into generateNewBlock function
@@ -19,6 +19,7 @@ export default class Spaghetti {
   ) {
     this.generateBlock = this.generateBlock.bind(this);
     this.generateBlockPart = this.generateBlockPart.bind(this);
+    this.command
   }
 
   public generateBlock() {

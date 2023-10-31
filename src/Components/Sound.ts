@@ -1,9 +1,9 @@
 
 interface ISound {
-  play(): void; 
-  stop(): void; 
-  repeat(count: number): void; 
-  setVolume(value: number): void; 
+  play(): void;
+  stop(): void;
+  repeat(count: number): void;
+  setVolume(value: number): void;
 }
 
 export default class Sound implements ISound {
@@ -23,7 +23,7 @@ export default class Sound implements ISound {
   }
 
   repeat(count: number) {
-    if (count>0) {
+    if (count > 0) {
       this.audio.loop = true;
     } else if (count > 0) {
       this.audio.loop = false;

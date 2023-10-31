@@ -40,9 +40,9 @@ const game = new Game(engineManager, eventEmitter, stats);
 
 // ToDo: PASS FUNCTION TO METHOD FOR CALCULATE POSITION AND SIZE
 // ToDo: MAYBE ADD TWO POSITION HELPER FIRST - FOR BLOCK, SECOND FOR SLICE BLOCK
-const stableBlockCommand = new StableBlockCommand(positionHelper, blockSizeManager);
-const offsetBlockCommand = new OffsetBlockCommand(positionHelper, blockSizeManager)
-const sliceBlockCommand = new SliceBlockCommand(positionHelper, blockSizeManager);
+const stableBlockCommand = new StableBlockCommand(positionHelper, blockSizeManager, eventEmitter);
+const offsetBlockCommand = new OffsetBlockCommand(positionHelper, blockSizeManager, eventEmitter)
+const sliceBlockCommand = new SliceBlockCommand(positionHelper, blockSizeManager, eventEmitter);
 
 
 /**
@@ -69,7 +69,6 @@ eventEmitter.addListener(ADD_BLOCK_IN_STACK, blocksStack.addBlock)
 
 window.addEventListener('DOMContentLoaded', () => {
   eventEmitter.emit(CREATE_BLOCK);
-
   eventEmitter.emit(PRERENDER);
 })
 
@@ -82,40 +81,18 @@ window.addEventListener('click', () => {
 
     eventEmitter.emit(DELETE_BLOCK, activeBlock);
 
-    const slice = sliceBlockCommand.execute(axis, stableBlock.getUiBlock(), activeBlock.getUiBlock());
-    eventEmitter.emit(CHANGE_POSITION, slice.position);
-    eventEmitter.emit(CHANGE_BLOCK_SIZE, slice.size);
+    sliceBlockCommand.execute(axis, stableBlock.getUiBlock(), activeBlock.getUiBlock());
     eventEmitter.emit(CREATE_BLOCK_PART);
 
-    const stable = stableBlockCommand.execute(axis, stableBlock.getUiBlock(), activeBlock.getUiBlock());
-    eventEmitter.emit(CHANGE_POSITION, stable.position);
-    eventEmitter.emit(CHANGE_BLOCK_SIZE, stable.size);
+    stableBlockCommand.execute(axis, stableBlock.getUiBlock(), activeBlock.getUiBlock());
     eventEmitter.emit(CREATE_BLOCK);
   }
-})
 
-window.addEventListener('click', () => {
   eventEmitter.emit(CHANGE_AXIS);
-})
 
-window.addEventListener('click', () => {
-  const axis = game.getAxis();
-
-  const offset = offsetBlockCommand.execute(axis);
-  eventEmitter.emit(CHANGE_POSITION, offset.position);
-  eventEmitter.emit(CHANGE_BLOCK_SIZE, offset.size);
+  offsetBlockCommand.execute(game.getAxis());
   eventEmitter.emit(CREATE_BLOCK);
-})
-
-window.addEventListener('click', () => {
   eventEmitter.emit(CHANGE_CAMERA_POSITION);
-})
 
-window.addEventListener('click', () => {
-  const isGameStarted = game.getIsGameStarted();
-
-  // first click
-  if (!isGameStarted) {
-    eventEmitter.emit(START_GAME, true);
-  }
+  if (!isGameStarted) eventEmitter.emit(START_GAME, true);
 })

@@ -5,19 +5,28 @@ import { IntersectionHelper } from "../../Utils/IntersectionHelper";
 import BlockSizeManager from "../Block/BlockSizeManager";
 import PositionHelper from "../PositionHelper";
 import AxisSizeMapper from "../../Utils/AxisSizeMapper";
+import EventEmitter from "../../Utils/EventEmitter";
+import { CHANGE_BLOCK_SIZE, CHANGE_POSITION } from "../../Const/actions";
 
 export default class SliceBlockCommand implements BlockCommand {
   private intersectionHelper = IntersectionHelper
   private boxHelper = BoxHelper
   private axisSizeMapper = AxisSizeMapper
 
-  constructor(private positionHelper: PositionHelper, private blockSizeManager: BlockSizeManager) {
+  constructor(
+    private positionHelper: PositionHelper,
+    private blockSizeManager: BlockSizeManager,
+    private eventEmitter: EventEmitter,
+  ) {
 
   }
 
   execute(axis: Axis, stableMesh: Mesh, animateMesh: Mesh) {
     const position = this.getPosition(axis, stableMesh, animateMesh);
     const size = this.getSize(axis, stableMesh, animateMesh);
+
+    this.eventEmitter.emit(CHANGE_BLOCK_SIZE, size);
+    this.eventEmitter.emit(CHANGE_POSITION, position);
 
     return ({ position, size })
   }
