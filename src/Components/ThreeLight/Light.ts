@@ -1,11 +1,12 @@
-import { Color, Light as ThreeLight } from "three";
-import { Positions } from "../../Types/common";
-import LightFactory, { LightType } from "./LightFactory";
+import { Color, Light as ThreeLight } from 'three'
+
+import { Positions } from '../../Types/common'
+import LightFactory, { LightType } from './LightFactory'
 
 interface LightOptions {
-  lightType: LightType;
-  position?: Positions;
-  color?: Color;
+  lightType: LightType
+  position?: Positions
+  color?: Color
 }
 
 // Wrong implementation
@@ -13,11 +14,15 @@ interface LightOptions {
 export default class Light {
   private light: ThreeLight
 
-  constructor({ lightType, position = [1, 1, 1], color = new Color('white') }: LightOptions) {
+  constructor({
+    lightType,
+    position = [1, 1, 1],
+    color = new Color('white'),
+  }: LightOptions) {
     this.light = LightFactory.create(lightType)
 
-    this.setLightColor(color);
-    this.setPosition(position);
+    this.setLightColor(color)
+    this.setPosition(position)
   }
 
   public setPosition(position: Positions) {
@@ -25,7 +30,7 @@ export default class Light {
   }
 
   public setLightColor(color: Color) {
-    this.light.color.set(color);
+    this.light.color.set(color)
   }
 
   public getLight() {
@@ -33,6 +38,6 @@ export default class Light {
   }
 
   public setIntensity(intensity: number) {
-    this.light.intensity = intensity;
+    this.light.intensity = intensity
   }
 }

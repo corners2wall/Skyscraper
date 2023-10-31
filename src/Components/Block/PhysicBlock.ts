@@ -1,17 +1,14 @@
 import { Body, Box, Vec3 } from 'cannon-es'
-import { BlockSize, ObjectPosition } from '../../Types/common';
+
+import { BlockSize, ObjectPosition } from '../../Types/common'
 
 export default class PhysicBlock extends Body {
-  constructor(
-    position: ObjectPosition,
-    size: BlockSize,
-    mass = 0
-  ) {
-    super({ mass });
-    const shape = this.generateCubeShape(size);
+  constructor(position: ObjectPosition, size: BlockSize, mass = 0) {
+    super({ mass })
+    const shape = this.generateCubeShape(size)
 
-    this.addShape(shape);
-    this.setPosition(position);
+    this.addShape(shape)
+    this.setPosition(position)
   }
 
   private generateCubeShape({ width, height, depth }: BlockSize): Box {

@@ -1,30 +1,31 @@
-import { MapKey } from "../Types/common";
+import { MapKey } from '../Types/common'
 
-type AnyFunction = (...args: any[]) => any;
+type AnyFunction = (...args: any[]) => any
 
 export default class EventEmitter<Events extends MapKey = MapKey> {
-  eventMap: Map<Events, AnyFunction[]>;
+  eventMap: Map<Events, AnyFunction[]>
+
   constructor() {
-    this.eventMap = new Map();
+    this.eventMap = new Map()
   }
 
   private get(key: Events) {
-    return this.eventMap.get(key);
+    return this.eventMap.get(key)
   }
 
   addListener(eventType: Events, listener: AnyFunction) {
-    const callbacks = this.get(eventType) || [];
+    const callbacks = this.get(eventType) || []
 
-    this.eventMap.set(eventType, [...callbacks, listener]);
+    this.eventMap.set(eventType, [...callbacks, listener])
   }
 
   removeListener(eventType: Events, listener: AnyFunction) {
-    (this.get(eventType) || []).filter((callback) => callback !== listener);
+    ;(this.get(eventType) || []).filter((callback) => callback !== listener)
   }
 
   emit(eventType: Events, ...data: any) {
-    const callbacks = this.get(eventType) || [];
+    const callbacks = this.get(eventType) || []
 
-    callbacks.forEach((callback) => callback(...data));
+    callbacks.forEach((callback) => callback(...data))
   }
 }
