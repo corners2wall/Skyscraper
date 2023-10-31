@@ -1,14 +1,7 @@
 {
-  "arrowParens": "always",
-  "bracketSpacing": true,
-  "embeddedLanguageFormatting": "auto",
-  "endOfLine": "lf",
-  "insertPragma": false,
-  "proseWrap": "preserve",
-  "requirePragma": false,
-  "singleQuote": true,
+  "tslintintegration": true,
+  "trailingComma": "all",
   "tabWidth": 2,
-  "trailingComma": "es5",
-  "useTabs": false,
-  "printWidth": 100
+  "semi": false,
+  "singleQuote": true
 }
