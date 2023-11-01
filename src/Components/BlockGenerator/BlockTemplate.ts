@@ -1,5 +1,5 @@
 import { CHANGE_BLOCK_SIZE, CHANGE_POSITION } from '../../Const/actions'
-import { Axis, BlockSize, ObjectPosition } from '../../Types/common'
+import { Axis, Size, ObjectPosition } from '../../Types/common'
 import EventEmitter from '../../Utils/EventEmitter'
 
 // ToDo maybe use this instance of COMMAND?
@@ -8,9 +8,9 @@ export default class BlockTemplate {
 
   public findSize(
     axis: Axis,
-    size: BlockSize,
-    cb: (axis: Axis, size: BlockSize) => BlockSize,
-  ): BlockSize {
+    size: Size,
+    cb: (axis: Axis, size: Size) => Size,
+  ): Size {
     const newSize = cb(axis, size)
 
     this.eventEmitter.emit(CHANGE_BLOCK_SIZE, newSize)

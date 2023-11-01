@@ -22,8 +22,6 @@ export const DELETE_BLOCK = Symbol('delete-block')
 
 export const CHANGE_CAMERA_POSITION = Symbol('change_camera_position')
 
-export const GET_AXIS_LINE = Symbol('get_axis_line')
-
 export const CREATE_BLOCK_PART = Symbol('create_block_part')
 
 export const ADD_BLOCK_IN_STACK = Symbol('add-block-in-stack')

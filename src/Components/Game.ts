@@ -1,21 +1,22 @@
-import Stats from 'stats.js'
+import { inject, injectable } from 'inversify'
 
 import { ANIMATE_ACTIVE_BLOCK, SYNC_POSITION } from '../Const/actions'
+import TYPES from '../Inversify/types'
 import { Axis } from '../Types/common'
 import EventEmitter from '../Utils/EventEmitter'
 import EngineManager from './EngineManager'
+import Stats from './Stats'
 
-// Seems like god object
+@injectable()
 export default class Game {
   private axis: Axis
 
-  // ToDo Maybe delete this property
   private isGameStarted = false
 
   constructor(
-    private engineManager: EngineManager,
-    private eventEmitter: EventEmitter,
-    private stats: Stats,
+    @inject(TYPES.EngineManager) private engineManager: EngineManager,
+    @inject(TYPES.EventEmitter) private eventEmitter: EventEmitter,
+    @inject(TYPES.Stats) private stats: Stats,
   ) {
     this.axis = 'x'
     this.toggleAxes = this.toggleAxes.bind(this)

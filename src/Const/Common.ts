@@ -1,4 +1,4 @@
-import { BlockSize, ObjectPosition } from '../Types/common'
+import { Size, ObjectPosition } from '../Types/common'
 
 export const BLOCK_SPEED = 0.15
 
@@ -12,7 +12,7 @@ export const BLOCK_POSITION: ObjectPosition = {
   z: 1.5,
 }
 
-export const BLOCK_SIZE: BlockSize = {
+export const BLOCK_SIZE: Size = {
   width: 3,
   height: 1,
   depth: 3,

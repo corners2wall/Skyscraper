@@ -1,19 +1,23 @@
-import { BlockSize, SizeUnit } from '../../Types/common'
+import { injectable } from 'inversify'
 
-export default class BlockSizeManager {
+import { Size, SizeUnit } from '../../Types/common'
+import { SizeHelper } from '../../Types/interfaces'
+
+@injectable()
+export default class BlockSize implements SizeHelper {
   constructor(
     private width: number,
     private height: number,
     private depth: number,
   ) {
-    this.setSizes = this.setSizes.bind(this)
+    this.setSize = this.setSize.bind(this)
   }
 
-  public getSizes(): BlockSize {
+  public getSize(): Size {
     return { width: this.width, height: this.height, depth: this.depth }
   }
 
-  public setSizes({ width, height, depth }: BlockSize) {
+  public setSize({ width, height, depth }: Size) {
     this.width = width
     this.height = height
     this.depth = depth

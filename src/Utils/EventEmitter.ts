@@ -1,12 +1,17 @@
-import { MapKey } from '../Types/common'
+import { injectable } from 'inversify'
 
-type AnyFunction = (...args: any[]) => any
+import { AnyFunction, MapKey } from '../Types/common'
+import { Emitter } from '../Types/interfaces'
 
-export default class EventEmitter<Events extends MapKey = MapKey> {
+@injectable()
+export default class EventEmitter<Events extends MapKey = MapKey>
+  implements Emitter<Events>
+{
   eventMap: Map<Events, AnyFunction[]>
 
   constructor() {
     this.eventMap = new Map()
+    // this.emit = this.emit.bind(this)
   }
 
   private get(key: Events) {

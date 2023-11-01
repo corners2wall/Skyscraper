@@ -2005,6 +2005,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"inversify@npm:^6.0.2":
+  version: 6.0.2
+  resolution: "inversify@npm:6.0.2"
+  checksum: 9aafd41de12cb1dc1cebe6e0cc51fbda8a0f9cbcdc024874a7bc078f1317bb3e0f4a51cb28b2f3c69cc00f3e1f16e77f6e153c063b19da56f3592903dc21552c
+  languageName: node
+  linkType: hard
+
 "ip@npm:^2.0.0":
   version: 2.0.0
   resolution: "ip@npm:2.0.0"
@@ -3066,6 +3073,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"reflect-metadata@npm:^0.1.13":
+  version: 0.1.13
+  resolution: "reflect-metadata@npm:0.1.13"
+  checksum: 798d379a7b6f6455501145419505c97dd11cbc23857a386add2b9ef15963ccf15a48d9d15507afe01d4cd74116df8a213247200bac00320bd7c11ddeaa5e8fb4
+  languageName: node
+  linkType: hard
+
 "reflect.getprototypeof@npm:^1.0.4":
   version: 1.0.4
   resolution: "reflect.getprototypeof@npm:1.0.4"
@@ -3337,7 +3351,9 @@ __metadata:
     eslint-plugin-perfectionist: ^2.2.0
     eslint-plugin-prettier: ^5.0.1
     eslint-plugin-react: ^7.33.2
+    inversify: ^6.0.2
     prettier: 3.0.3
+    reflect-metadata: ^0.1.13
     stats.js: ^0.17.0
     three: ^0.157.0
     typescript: ^5.0.2

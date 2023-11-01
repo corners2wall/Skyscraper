@@ -1,6 +1,7 @@
 import { Body, World } from 'cannon-es'
 
-import { Engine, WorldOptions } from '../../Types/common'
+import { WorldOptions } from '../../Types/common'
+import { Engine } from '../../Types/interfaces'
 
 export default class CannonEngine implements Engine {
   private world: World

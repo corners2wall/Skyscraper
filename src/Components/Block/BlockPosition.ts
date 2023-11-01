@@ -1,6 +1,10 @@
-import { Axis, ObjectPosition } from '../Types/common'
+import { injectable } from 'inversify'
 
-export default class PositionHelper {
+import { Axis, ObjectPosition } from '../../Types/common'
+import { PositionHelper } from '../../Types/interfaces'
+
+@injectable()
+export default class BlockPosition implements PositionHelper {
   constructor(
     private x: number,
     private y: number,

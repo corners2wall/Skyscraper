@@ -1,12 +1,9 @@
 import { BoxGeometry, Color, Mesh, MeshStandardMaterial } from 'three'
 
-import { BlockSize, ObjectPosition } from '../../Types/common'
+import { Size, ObjectPosition } from '../../Types/common'
 
 export default class UiBlock extends Mesh<BoxGeometry, MeshStandardMaterial> {
-  constructor(
-    { x, y, z }: ObjectPosition,
-    { width, depth, height }: BlockSize,
-  ) {
+  constructor({ x, y, z }: ObjectPosition, { width, depth, height }: Size) {
     super(new BoxGeometry(), new MeshStandardMaterial())
 
     this.position.set(x, y, z)

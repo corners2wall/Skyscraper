@@ -1,5 +1,9 @@
+import { decorate, injectable } from 'inversify'
 import StatsJs from 'stats.js'
 
+decorate(injectable(), StatsJs)
+
+@injectable()
 export default class Stats extends StatsJs {
   constructor() {
     super()

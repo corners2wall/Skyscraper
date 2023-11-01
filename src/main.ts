@@ -1,16 +1,10 @@
-import BlockSizeManager from './Components/Block/BlockSizeManager'
+import './style.css'
+
+import BlockGenerator from './Components/Block/BlockGenerator'
 import BlockStack from './Components/Block/BlockStack'
-import BlockGenerator from './Components/Block/Spaghetti'
-import OffsetBlockCommand from './Components/BlockGenerator/OffsetBlockCommand'
-import SliceBlockCommand from './Components/BlockGenerator/SliceBlockCommand'
-import StableBlockCommand from './Components/BlockGenerator/StableBlockCommand'
-import cannonEngine, { cannonEngineAdapter } from './Components/Cannon'
-import EngineManager from './Components/EngineManager'
+import { cannonEngineAdapter } from './Components/Cannon'
 import Game from './Components/Game'
-import PositionHelper from './Components/PositionHelper'
-import Stats from './Components/Stats'
-import threeEngine, { camera, threeEngineAdapter } from './Components/Three'
-import { BLOCK_POSITION, BLOCK_SIZE } from './Const/Common'
+import { camera, threeEngineAdapter } from './Components/Three'
 import {
   CREATE_BLOCK,
   ANIMATE_ACTIVE_BLOCK,
@@ -23,56 +17,40 @@ import {
   CHANGE_BLOCK_SIZE,
   DELETE_BLOCK,
   CHANGE_CAMERA_POSITION,
-  GET_AXIS_LINE,
   CREATE_BLOCK_PART,
   ADD_BLOCK_IN_STACK,
 } from './Const/actions'
-import BoxHelper from './Utils/BoxHelper'
-import EventEmitter from './Utils/EventEmitter'
-
-import './style.css'
+import container from './Inversify/container'
+import TYPES from './Inversify/types'
+import {
+  PositionHelper,
+  BlockCommand,
+  Emitter,
+  SizeHelper,
+  AnimateManager,
+} from './Types/interfaces'
 
 /**
  * Setup instances
  */
-const eventEmitter = new EventEmitter()
-const engineManager = new EngineManager(threeEngine, cannonEngine)
-const stats = new Stats()
-const positionHelper = new PositionHelper(
-  BLOCK_POSITION.x,
-  BLOCK_POSITION.y,
-  BLOCK_POSITION.z,
-)
-const blockSizeManager = new BlockSizeManager(
-  BLOCK_SIZE.width,
-  BLOCK_SIZE.height,
-  BLOCK_SIZE.depth,
-)
-const blockGenerator = new BlockGenerator(
-  positionHelper,
-  blockSizeManager,
-  eventEmitter,
-)
+
+const blockPosition = container.get<PositionHelper>(TYPES.PositionHelper)
+const blockSize = container.get<SizeHelper>(TYPES.SizeHelper)
+const eventEmitter = container.get<Emitter>(TYPES.EventEmitter)
+const offsetBlockCommand = container.get<BlockCommand>(TYPES.OffsetBlockCommand)
+const stableBlockCommand = container.get<BlockCommand>(TYPES.StableBlockCommand)
+const sliceBlockCommand = container.get<BlockCommand>(TYPES.SliceBlockCommand)
+const engineManager = container.get<AnimateManager>(TYPES.EngineManager)
+const blockGenerator = container.get<BlockGenerator>(TYPES.BlockGenerator)
+const game = container.get<Game>(TYPES.Game)
+
+// const engineManager = new EngineManager(threeEngine, cannonEngine)
+// const stats = new Stats()
+
 const blocksStack = new BlockStack()
-const game = new Game(engineManager, eventEmitter, stats)
 
 // ToDo: PASS FUNCTION TO METHOD FOR CALCULATE POSITION AND SIZE
 // ToDo: MAYBE ADD TWO POSITION HELPER FIRST - FOR BLOCK, SECOND FOR SLICE BLOCK
-const stableBlockCommand = new StableBlockCommand(
-  positionHelper,
-  blockSizeManager,
-  eventEmitter,
-)
-const offsetBlockCommand = new OffsetBlockCommand(
-  positionHelper,
-  blockSizeManager,
-  eventEmitter,
-)
-const sliceBlockCommand = new SliceBlockCommand(
-  positionHelper,
-  blockSizeManager,
-  eventEmitter,
-)
 
 /**
  * Callbacks on events
@@ -95,14 +73,13 @@ eventEmitter.addListener(
   ANIMATE_ACTIVE_BLOCK,
   blocksStack.changePositionInLastBlock,
 )
-eventEmitter.addListener(CHANGE_POSITION, positionHelper.setPosition)
-eventEmitter.addListener(CHANGE_BLOCK_SIZE, blockSizeManager.setSizes)
+eventEmitter.addListener(CHANGE_POSITION, blockPosition.setPosition)
+eventEmitter.addListener(CHANGE_BLOCK_SIZE, blockSize.setSize)
 eventEmitter.addListener(SYNC_POSITION, blocksStack.syncBlockPosition)
 eventEmitter.addListener(DELETE_BLOCK, threeEngineAdapter.removeGameBlock)
 eventEmitter.addListener(DELETE_BLOCK, cannonEngineAdapter.removeGameBlock)
 eventEmitter.addListener(DELETE_BLOCK, blocksStack.removeBlock)
 eventEmitter.addListener(CHANGE_CAMERA_POSITION, camera.updateCameraPosition)
-eventEmitter.addListener(GET_AXIS_LINE, BoxHelper.getAxisLineCannon)
 eventEmitter.addListener(ADD_BLOCK_IN_STACK, blocksStack.addBlock)
 
 window.addEventListener('DOMContentLoaded', () => {

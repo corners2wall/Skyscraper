@@ -7,7 +7,7 @@ export interface Line {
   end: number
 }
 
-export interface Size {
+export interface IntersectionSize {
   size: number
   start: number
 }
@@ -15,10 +15,6 @@ export interface Size {
 export type Axis = 'x' | 'y' | 'z'
 
 export type SizeUnit = 'width' | 'height' | 'depth'
-
-export interface Engine {
-  render(): void
-}
 
 export interface Builder<T> {
   build(): T
@@ -28,7 +24,7 @@ export type Positions = [x: number, y: number, z: number]
 
 export type ObjectPosition = Record<Axis, number>
 
-export type BlockSize = Record<SizeUnit, number>
+export type Size = Record<SizeUnit, number>
 
 export interface WorldOptions {
   gravity?: Vec3
@@ -51,9 +47,4 @@ export interface GameBlockAdapter {
   removeGameBlock(block: GameBlock): void
 }
 
-export interface BlockCommand {
-  execute(...args: any[]): {
-    position: ObjectPosition
-    size: BlockSize
-  }
-}
+export type AnyFunction = (...args: any[]) => any

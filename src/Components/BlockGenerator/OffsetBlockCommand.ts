@@ -1,15 +1,20 @@
+import { inject, injectable } from 'inversify'
+
 import { DEFAULT_AXIS_OFFSET } from '../../Const/Common'
 import { CHANGE_BLOCK_SIZE, CHANGE_POSITION } from '../../Const/actions'
-import { Axis, BlockCommand } from '../../Types/common'
+import TYPES from '../../Inversify/types'
+import { Axis } from '../../Types/common'
+import { BlockCommand } from '../../Types/interfaces'
 import EventEmitter from '../../Utils/EventEmitter'
-import BlockSizeManager from '../Block/BlockSizeManager'
-import PositionHelper from '../PositionHelper'
+import BlockPosition from '../Block/BlockPosition'
+import BlockSize from '../Block/BlockSize'
 
+@injectable()
 export default class OffsetBlockCommand implements BlockCommand {
   constructor(
-    private positionHelper: PositionHelper,
-    private blockSizeManager: BlockSizeManager,
-    private eventEmitter: EventEmitter,
+    @inject(TYPES.PositionHelper) private blockPosition: BlockPosition,
+    @inject(TYPES.SizeHelper) private blockSize: BlockSize,
+    @inject(TYPES.EventEmitter) private eventEmitter: EventEmitter,
   ) {}
 
   execute(axis: Axis) {
@@ -23,13 +28,13 @@ export default class OffsetBlockCommand implements BlockCommand {
   }
 
   private getPosition(axis: Axis) {
-    const { x, y, z } = this.positionHelper.getPosition()
+    const { x, y, z } = this.blockPosition.getPosition()
 
     return { x, y: y + 1, z, [axis]: DEFAULT_AXIS_OFFSET }
   }
 
   private getSize() {
-    const size = this.blockSizeManager.getSizes()
+    const size = this.blockSize.getSize()
 
     return size
   }

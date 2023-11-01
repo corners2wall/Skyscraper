@@ -1,30 +1,29 @@
+import { inject, injectable } from 'inversify'
+
 import { BLOCK_MASS } from '../../Const/Common'
 import { ADD_BLOCK_IN_STACK, SYNC_BLOCK_WITH_ENGINE } from '../../Const/actions'
-import { BlockCommand } from '../../Types/common'
+import TYPES from '../../Inversify/types'
 import EventEmitter from '../../Utils/EventEmitter'
-import PositionHelper from '../PositionHelper'
 import Block from './Block'
-import BlockSizeManager from './BlockSizeManager'
+import BlockPosition from './BlockPosition'
+import BlockSize from './BlockSize'
 import PhysicBlock from './PhysicBlock'
 import UiBlock from './UiBlock'
 
-export default class Spaghetti {
-  private command: BlockCommand
-
+@injectable()
+export default class BlockGenerator {
   constructor(
-    // ToDo: remove from here, pass as parameters into generateNewBlock function
-    private positionHelper: PositionHelper,
-    private blockSizeManager: BlockSizeManager,
-    private eventEmitter: EventEmitter,
+    @inject(TYPES.PositionHelper) private blockPosition: BlockPosition,
+    @inject(TYPES.SizeHelper) private blockSize: BlockSize,
+    @inject(TYPES.EventEmitter) private eventEmitter: EventEmitter,
   ) {
     this.generateBlock = this.generateBlock.bind(this)
     this.generateBlockPart = this.generateBlockPart.bind(this)
-    this.command
   }
 
   public generateBlock() {
-    const position = this.positionHelper.getPosition()
-    const size = this.blockSizeManager.getSizes()
+    const position = this.blockPosition.getPosition()
+    const size = this.blockSize.getSize()
 
     const uiBlock = new UiBlock(position, size)
     const physicBlock = new PhysicBlock(position, size)
@@ -37,8 +36,8 @@ export default class Spaghetti {
 
   // ???
   public generateBlockPart() {
-    const position = this.positionHelper.getPosition()
-    const size = this.blockSizeManager.getSizes()
+    const position = this.blockPosition.getPosition()
+    const size = this.blockSize.getSize()
 
     const uiBlock = new UiBlock(position, size)
     const physicBlock = new PhysicBlock(position, size, BLOCK_MASS)

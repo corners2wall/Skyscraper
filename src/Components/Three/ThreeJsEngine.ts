@@ -1,6 +1,6 @@
 import { Camera, Object3D, Renderer, Scene } from 'three'
 
-import { Engine } from '../../Types/common'
+import { Engine } from '../../Types/interfaces'
 
 export default class ThreeJsEngine implements Engine {
   private renderer: Renderer

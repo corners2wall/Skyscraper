@@ -1,7 +1,7 @@
-import { Line, Size } from '../Types/common'
+import { IntersectionSize, Line } from '../Types/common'
 
 export default class IntersectionHelper {
-  static getLineIntersection(line1: Line, line2: Line): Size {
+  static getLineIntersection(line1: Line, line2: Line): IntersectionSize {
     if (line1.end < line2.start || line2.end < line1.start) {
       return { size: 0, start: 0 }
     }
@@ -23,7 +23,7 @@ export default class IntersectionHelper {
     return { size: 0, start: 0 }
   }
 
-  static getLineDifference(line1: Line, line2: Line): Size {
+  static getLineDifference(line1: Line, line2: Line): IntersectionSize {
     if (line1.end < line2.start || line2.end < line1.start) {
       const size = line2.end - line2.start
       const start = line2.start + size / 2

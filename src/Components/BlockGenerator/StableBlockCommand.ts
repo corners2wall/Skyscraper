@@ -1,21 +1,24 @@
+import { inject, injectable } from 'inversify'
 import { Mesh } from 'three'
 
 import { CHANGE_BLOCK_SIZE, CHANGE_POSITION } from '../../Const/actions'
+import TYPES from '../../Inversify/types'
 import {
   Axis,
-  BlockCommand,
-  BlockSize,
+  Size,
   Line,
   ObjectPosition,
-  Size,
+  IntersectionSize,
 } from '../../Types/common'
+import { BlockCommand } from '../../Types/interfaces'
 import AxisSizeMapper from '../../Utils/AxisSizeMapper'
 import BoxHelper from '../../Utils/BoxHelper'
 import EventEmitter from '../../Utils/EventEmitter'
-import { IntersectionHelper } from '../../Utils/IntersectionHelper'
-import BlockSizeManager from '../Block/BlockSizeManager'
-import PositionHelper from '../PositionHelper'
+import IntersectionHelper from '../../Utils/IntersectionHelper'
+import BlockPosition from '../Block/BlockPosition'
+import BlockSize from '../Block/BlockSize'
 
+@injectable()
 export default class StableBlockCommand implements BlockCommand {
   private intersectionHelper = IntersectionHelper
 
@@ -24,9 +27,9 @@ export default class StableBlockCommand implements BlockCommand {
   private axisSizeMapper = AxisSizeMapper
 
   constructor(
-    private positionHelper: PositionHelper,
-    private blockSizeManager: BlockSizeManager,
-    private eventEmitter: EventEmitter,
+    @inject(TYPES.PositionHelper) private blockPosition: BlockPosition,
+    @inject(TYPES.SizeHelper) private blockSize: BlockSize,
+    @inject(TYPES.EventEmitter) private eventEmitter: EventEmitter,
   ) {}
 
   execute(axis: Axis, stableMesh: Mesh, animateMesh: Mesh) {
@@ -45,14 +48,14 @@ export default class StableBlockCommand implements BlockCommand {
     animateMesh: Mesh,
   ): ObjectPosition {
     const { start } = this.findIntersection(axis, stableMesh, animateMesh)
-    const position = this.positionHelper.getPosition()
+    const position = this.blockPosition.getPosition()
 
     return { ...position, [axis]: start }
   }
 
-  private getSize(axis: Axis, stableMesh: Mesh, animateMesh: Mesh): BlockSize {
+  private getSize(axis: Axis, stableMesh: Mesh, animateMesh: Mesh): Size {
     const { size } = this.findIntersection(axis, stableMesh, animateMesh)
-    const blockSize = this.blockSizeManager.getSizes()
+    const blockSize = this.blockSize.getSize()
     const sizeUnit = this.axisSizeMapper.axisToSize(axis)
 
     return { ...blockSize, [sizeUnit]: size }
@@ -62,7 +65,7 @@ export default class StableBlockCommand implements BlockCommand {
     axis: Axis,
     stableMesh: Mesh,
     animateMesh: Mesh,
-  ): Size {
+  ): IntersectionSize {
     const stableLine = this.getLineFromMesh(axis, stableMesh)
     const animateLine = this.getLineFromMesh(axis, animateMesh)
 

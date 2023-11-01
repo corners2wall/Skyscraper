@@ -1,6 +1,5 @@
 import { Box3, Mesh } from 'three'
 
-import BlockSizeManager from '../Components/Block/BlockSizeManager'
 import { Axis, Line } from '../Types/common'
 
 export default class BoxHelper {
@@ -10,15 +9,5 @@ export default class BoxHelper {
 
   static wrapMeshToBox(mesh: Mesh): Box3 {
     return new Box3().setFromObject(mesh)
-  }
-
-  static getAxisLineCannon(
-    physicBlock: PhysicBlock,
-    blockSize: BlockSizeManager,
-    axis: Axis,
-  ) {
-    const t = physicBlock.position[axis]
-    debugger
-    // return
   }
 }

@@ -32,6 +32,8 @@
   "packageManager": "yarn@3.6.4",
   "dependencies": {
     "cannon-es": "^0.20.0",
+    "inversify": "^6.0.2",
+    "reflect-metadata": "^0.1.13",
     "three": "^0.157.0"
   }
 }
