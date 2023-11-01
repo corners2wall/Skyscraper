@@ -1,7 +1,10 @@
+import { injectable } from 'inversify'
+
 import { BLOCK_SPEED } from '../../Const/Common'
 import { Axis } from '../../Types/common'
 import Block from './Block'
 
+@injectable()
 export default class BlockStack {
   private blocks: Block[]
 

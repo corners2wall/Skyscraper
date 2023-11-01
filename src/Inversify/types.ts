@@ -2,13 +2,13 @@ const TYPES = {
   SizeHelper: 'SizeHelper',
   PositionHelper: 'PositionHelper',
   EventEmitter: 'EventEmitter',
-  SliceBlockCommand: 'SliceBlockCommand',
-  StableBlockCommand: 'StableBlockCommand',
-  OffsetBlockCommand: 'OffsetBlockCommand',
+  BlockCommand: 'BlockCommand',
   EngineManager: 'EngineManager',
   Game: 'Game',
   Stats: 'Stats',
   BlockGenerator: 'BlockGenerator',
+  BlockStack: 'BlockStack',
+  Engine: 'Engine',
 }
 
 export default TYPES

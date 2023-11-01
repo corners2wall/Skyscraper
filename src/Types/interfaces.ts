@@ -1,10 +1,4 @@
-import { AnyFunction, MapKey, ObjectPosition, Size } from './common'
-
-export interface Emitter<Events = MapKey> {
-  addListener(eventType: Events, listener: AnyFunction): void
-  removeListener(eventType: Events, listener: AnyFunction): void
-  emit(eventType: Events, ...data: any): void
-}
+import { ObjectPosition, Size } from './common'
 
 export interface BlockCommand {
   execute(...args: any[]): {
@@ -25,8 +19,4 @@ export interface SizeHelper {
 
 export interface Engine {
   render(): void
-}
-
-export interface AnimateManager {
-  animate(): void
 }

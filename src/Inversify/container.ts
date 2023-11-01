@@ -5,6 +5,7 @@ import { Container } from 'inversify'
 import BlockGenerator from '../Components/Block/BlockGenerator'
 import BlockPosition from '../Components/Block/BlockPosition'
 import BlockSize from '../Components/Block/BlockSize'
+import BlockStack from '../Components/Block/BlockStack'
 import OffsetBlockCommand from '../Components/BlockGenerator/OffsetBlockCommand'
 import SliceBlockCommand from '../Components/BlockGenerator/SliceBlockCommand'
 import StableBlockCommand from '../Components/BlockGenerator/StableBlockCommand'
@@ -15,9 +16,8 @@ import Stats from '../Components/Stats'
 import threeJsEngine from '../Components/Three'
 import { BLOCK_POSITION, BLOCK_SIZE } from '../Const/Common'
 import {
-  AnimateManager,
   BlockCommand,
-  Emitter,
+  Engine,
   PositionHelper,
   SizeHelper,
 } from '../Types/interfaces'
@@ -38,16 +38,35 @@ container
     new BlockSize(BLOCK_SIZE.width, BLOCK_SIZE.height, BLOCK_SIZE.depth),
   )
 
-container
-  .bind<AnimateManager>(TYPES.EngineManager)
-  .toConstantValue(new EngineManager(threeJsEngine, cannonEngine))
+container.bind<Engine>(TYPES.Engine).toConstantValue(threeJsEngine)
 
-container.bind<Emitter>(TYPES.EventEmitter).to(EventEmitter).inSingletonScope()
-container.bind<BlockCommand>(TYPES.SliceBlockCommand).to(SliceBlockCommand)
-container.bind<BlockCommand>(TYPES.StableBlockCommand).to(StableBlockCommand)
-container.bind<BlockCommand>(TYPES.OffsetBlockCommand).to(OffsetBlockCommand)
+container.bind<Engine>(TYPES.Engine).toConstantValue(cannonEngine)
+
+container.bind<EngineManager>(TYPES.EngineManager).to(EngineManager)
+
+container
+  .bind<EventEmitter>(TYPES.EventEmitter)
+  .to(EventEmitter)
+  .inSingletonScope()
+
+container
+  .bind<BlockCommand>(TYPES.BlockCommand)
+  .to(SliceBlockCommand)
+  .whenTargetNamed('sliceCommand')
+
+container
+  .bind<BlockCommand>(TYPES.BlockCommand)
+  .to(StableBlockCommand)
+  .whenTargetNamed('stableCommand')
+
+container
+  .bind<BlockCommand>(TYPES.BlockCommand)
+  .to(OffsetBlockCommand)
+  .whenTargetNamed('offsetCommand')
+
 container.bind<Stats>(TYPES.Stats).to(Stats)
 container.bind<BlockGenerator>(TYPES.BlockGenerator).to(BlockGenerator)
 container.bind<Game>(TYPES.Game).to(Game)
+container.bind<BlockStack>(TYPES.BlockStack).to(BlockStack)
 
 export default container

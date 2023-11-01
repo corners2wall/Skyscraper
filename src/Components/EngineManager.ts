@@ -1,13 +1,12 @@
-import { injectable } from 'inversify'
+import { injectable, multiInject } from 'inversify'
 
-import { Engine } from '../Types/common'
-import { AnimateManager } from '../Types/interfaces'
+import { Engine } from '../Types/interfaces'
 
 @injectable()
-export default class EngineManager implements AnimateManager {
+export default class EngineManager {
   private engines: Engine[]
 
-  constructor(...engines: Engine[]) {
+  constructor(@multiInject('Engine') engines: Engine[]) {
     this.engines = engines
     this.animate = this.animate.bind(this)
   }

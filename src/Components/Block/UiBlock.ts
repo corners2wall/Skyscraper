@@ -8,10 +8,10 @@ export default class UiBlock extends Mesh<BoxGeometry, MeshStandardMaterial> {
 
     this.position.set(x, y, z)
     this.geometry.scale(width, height, depth)
-    this.material.color = this.generateColor(y)
+    this.material.color = UiBlock.generateColor(y)
   }
 
-  private generateColor(value: number): Color {
+  private static generateColor(value: number): Color {
     return new Color(`hsl(${30 + value * 4}, 100%, 50%)`)
   }
 }
