@@ -1,4 +1,5 @@
 import { Broadphase, Solver, Vec3 } from 'cannon-es'
+import { interfaces } from 'inversify'
 
 import GameBlock from '../Components/Block/Block'
 
@@ -36,10 +37,6 @@ export interface WorldOptions {
   quatNormalizeSkip?: number
 }
 
-export interface Factory<T> {
-  create(type: string): T
-}
-
 export type MapKey = string | number | symbol
 
 export interface GameBlockAdapter {
@@ -48,3 +45,8 @@ export interface GameBlockAdapter {
 }
 
 export type AnyFunction = (...args: any[]) => any
+
+export type Factory<
+  T,
+  U extends unknown[] = unknown[],
+> = interfaces.SimpleFactory<T, U>

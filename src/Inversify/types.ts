@@ -9,6 +9,8 @@ const TYPES = {
   BlockGenerator: 'BlockGenerator',
   BlockStack: 'BlockStack',
   Engine: 'Engine',
+  BlockFactory: 'BlockFactory',
+  Block: 'Block',
 }
 
 export default TYPES

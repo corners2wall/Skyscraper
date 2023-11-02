@@ -2,10 +2,13 @@ import 'reflect-metadata'
 
 import { Container } from 'inversify'
 
+import Block from '../Components/Block/Block'
 import BlockGenerator from '../Components/Block/BlockGenerator'
 import BlockPosition from '../Components/Block/BlockPosition'
 import BlockSize from '../Components/Block/BlockSize'
 import BlockStack from '../Components/Block/BlockStack'
+import PhysicBlock from '../Components/Block/PhysicBlock'
+import UiBlock from '../Components/Block/UiBlock'
 import OffsetBlockCommand from '../Components/BlockGenerator/OffsetBlockCommand'
 import SliceBlockCommand from '../Components/BlockGenerator/SliceBlockCommand'
 import StableBlockCommand from '../Components/BlockGenerator/StableBlockCommand'
@@ -15,6 +18,7 @@ import Game from '../Components/Game'
 import Stats from '../Components/Stats'
 import threeJsEngine from '../Components/Three'
 import { BLOCK_POSITION, BLOCK_SIZE } from '../Const/Common'
+import { Factory } from '../Types/common'
 import {
   BlockCommand,
   Engine,
@@ -68,5 +72,18 @@ container.bind<Stats>(TYPES.Stats).to(Stats)
 container.bind<BlockGenerator>(TYPES.BlockGenerator).to(BlockGenerator)
 container.bind<Game>(TYPES.Game).to(Game)
 container.bind<BlockStack>(TYPES.BlockStack).to(BlockStack)
+container
+  .bind<Factory<Block>>(TYPES.BlockFactory)
+  .toFactory<Block, [UiBlock, PhysicBlock]>(
+    (context) => (uiBlock, physicBlock) => {
+      const block = context.container.get<Block>(TYPES.Block)
+
+      block.setUiBlock(uiBlock)
+      block.setPhysicBlock(physicBlock)
+
+      return block
+    },
+  )
+container.bind<Block>(TYPES.Block).to(Block)
 
 export default container

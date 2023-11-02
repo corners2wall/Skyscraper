@@ -1,21 +1,22 @@
 import { Quaternion, Vec3 } from 'cannon-es'
+import { injectable } from 'inversify'
 
 import { Positions } from '../../Types/common'
 import PhysicBlock from './PhysicBlock'
 import UiBlock from './UiBlock'
 
+@injectable()
 export default class Block {
-  constructor(
-    protected uiBlock: UiBlock,
-    protected physicBlock: PhysicBlock,
-  ) {}
+  protected uiBlock: UiBlock
+
+  protected physicBlock: PhysicBlock
 
   public syncPosition() {
     this.uiBlock.position.set(
-      ...this.convertVectorToArray(this.physicBlock.position),
+      ...Block.convertVectorToArray(this.physicBlock.position),
     )
     this.uiBlock.quaternion.set(
-      ...this.convertQuaternionToArray(this.physicBlock.quaternion),
+      ...Block.convertQuaternionToArray(this.physicBlock.quaternion),
     )
   }
 
@@ -27,15 +28,23 @@ export default class Block {
     return this.uiBlock
   }
 
+  public setUiBlock(uiBlock: UiBlock) {
+    this.uiBlock = uiBlock
+  }
+
   public getPhysicBlock() {
     return this.physicBlock
   }
 
-  private convertVectorToArray({ x, y, z }: Vec3): Positions {
+  public setPhysicBlock(physicBlock: PhysicBlock) {
+    this.physicBlock = physicBlock
+  }
+
+  private static convertVectorToArray({ x, y, z }: Vec3): Positions {
     return [x, y, z]
   }
 
-  private convertQuaternionToArray({
+  private static convertQuaternionToArray({
     x,
     y,
     z,

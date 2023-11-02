@@ -5,13 +5,13 @@ import { Size, ObjectPosition } from '../../Types/common'
 export default class PhysicBlock extends Body {
   constructor(position: ObjectPosition, size: Size, mass = 0) {
     super({ mass })
-    const shape = this.generateCubeShape(size)
+    const shape = PhysicBlock.generateCubeShape(size)
 
     this.addShape(shape)
     this.setPosition(position)
   }
 
-  private generateCubeShape({ width, height, depth }: Size): Box {
+  private static generateCubeShape({ width, height, depth }: Size): Box {
     return new Box(new Vec3(width / 2, height / 2, depth / 2))
   }
 

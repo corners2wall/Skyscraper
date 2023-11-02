@@ -53,7 +53,7 @@ export default class BlockStack {
     const [lastBlock] = this.getLastBlocks(1)
 
     const physicBlock = lastBlock.getPhysicBlock()
-    physicBlock.position[axis] = physicBlock.position[axis] + BLOCK_SPEED
+    physicBlock.position[axis] += BLOCK_SPEED
     lastBlock.syncPosition()
   }
 }
