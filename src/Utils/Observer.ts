@@ -18,7 +18,7 @@ export default class Observer<T> {
   }
 
   unsubscribe(observer: Observable<T>) {
-    this.observables = this.observables.filter((o) => o != observer)
+    this.observables = this.observables.filter((o) => o !== observer)
   }
 
   notify(data: T) {

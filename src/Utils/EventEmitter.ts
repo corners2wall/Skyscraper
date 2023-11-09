@@ -24,7 +24,7 @@ export default class EventEmitter<Events extends MapKey = MapKey> {
     ;(this.get(eventType) || []).filter((callback) => callback !== listener)
   }
 
-  emit(eventType: Events, ...data: any) {
+  emit(eventType: Events, ...data: any[]) {
     const callbacks = this.get(eventType) || []
 
     callbacks.forEach((callback) => callback(...data))

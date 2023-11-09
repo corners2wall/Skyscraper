@@ -1,8 +1,6 @@
 import { Broadphase, Solver, Vec3 } from 'cannon-es'
 import { interfaces } from 'inversify'
 
-import GameBlock from '../Components/Block/Block'
-
 export interface Line {
   start: number
   end: number
@@ -39,12 +37,14 @@ export interface WorldOptions {
 
 export type MapKey = string | number | symbol
 
+export interface GameBlock {}
+
 export interface GameBlockAdapter {
   addGameBlock(block: GameBlock): void
   removeGameBlock(block: GameBlock): void
 }
 
-export type AnyFunction = (...args: any[]) => any
+export type AnyFunction = (...args: any[]) => unknown
 
 export type Factory<
   T,

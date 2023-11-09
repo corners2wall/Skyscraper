@@ -1,12 +1,12 @@
 import { Quaternion, Vec3 } from 'cannon-es'
 import { injectable } from 'inversify'
 
-import { Positions } from '../../Types/common'
+import { Positions, GameBlock } from '../../Types/common'
 import PhysicBlock from './PhysicBlock'
 import UiBlock from './UiBlock'
 
 @injectable()
-export default class Block {
+export default class Block implements GameBlock {
   protected uiBlock: UiBlock
 
   protected physicBlock: PhysicBlock

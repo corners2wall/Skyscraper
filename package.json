@@ -23,7 +23,6 @@
     "eslint-plugin-prettier": "^5.0.1",
     "eslint-plugin-react": "^7.33.2",
     "prettier": "3.0.3",
-    "stats.js": "^0.17.0",
     "typescript": "^5.0.2",
     "vite": "^4.5.0"
   },
@@ -34,6 +33,7 @@
     "cannon-es": "^0.20.0",
     "inversify": "^6.0.2",
     "reflect-metadata": "^0.1.13",
+    "stats.js": "^0.17.0",
     "rxjs": "^7.8.1",
     "three": "^0.157.0"
   }

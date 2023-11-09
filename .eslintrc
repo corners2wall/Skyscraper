@@ -1,6 +1,10 @@
 {
   "root": true,
-  "plugins": ["@typescript-eslint", "prettier", "perfectionist"],
+  "plugins": [
+    "@typescript-eslint",
+    "prettier",
+    "perfectionist"
+  ],
   "extends": [
     "eslint:recommended",
     "airbnb-base",
@@ -18,7 +22,7 @@
     "ecmaVersion": "latest",
     "sourceType": "module",
     "project": "./tsconfig.json",
-    "parser":  "@typescript-eslint/parser"
+    "parser": "@typescript-eslint/parser"
   },
   "rules": {
     "prettier/prettier": "error",
@@ -32,15 +36,32 @@
           "react",
           "nanostores",
           "side-effect",
-          ["builtin", "external"],
+          [
+            "builtin",
+            "external"
+          ],
           "internal-type",
           "internal",
-          ["parent-type", "sibling-type", "index-type"],
-          ["parent", "sibling", "index"],
+          [
+            "parent-type",
+            "sibling-type",
+            "index-type"
+          ],
+          [
+            "parent",
+            "sibling",
+            "index"
+          ],
           "style",
           "object",
           "unknown"
         ]
+      }
+    ],
+    "@typescript-eslint/no-explicit-any": [
+      "error",
+      {
+        "ignoreRestArgs": true
       }
     ]
   }
