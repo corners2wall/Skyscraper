@@ -1,5 +1,7 @@
 import './style.css'
 
+import { fromEvent } from 'rxjs'
+
 import BlockGenerator from './Components/Block/BlockGenerator'
 import BlockStack from './Components/Block/BlockStack'
 import { cannonEngineAdapter } from './Components/Cannon'
@@ -79,12 +81,12 @@ eventEmitter.addListener(DELETE_BLOCK, blocksStack.removeBlock)
 eventEmitter.addListener(CHANGE_CAMERA_POSITION, camera.updateCameraPosition)
 eventEmitter.addListener(ADD_BLOCK_IN_STACK, blocksStack.addBlock)
 
-window.addEventListener('DOMContentLoaded', () => {
+fromEvent(window, 'DOMContentLoaded').subscribe(() => {
   eventEmitter.emit(CREATE_BLOCK)
   eventEmitter.emit(PRERENDER)
 })
 
-window.addEventListener('click', () => {
+fromEvent(window, 'click').subscribe(() => {
   const isGameStarted = game.getIsGameStarted()
   const axis = game.getAxis()
 
