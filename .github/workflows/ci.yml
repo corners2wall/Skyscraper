@@ -19,14 +19,18 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v3
 
-      - name: Setup node
+      - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
-          cache: 'npm'
+          node-version: 18
+          cache: yarn
+          cache-dependency-path: yarn.lock
 
-      - name: Install node dependencies
-        run: npm ci
+      - name: Install with Yarn
+        run: yarn && yarn install
 
-      - name: Run ESLint
-        run: npm run lint
+      - name: Compile with TypeScript
+        run: yarn tsc
+
+      - name: Lint with ESLint
+        run: yarn lint
